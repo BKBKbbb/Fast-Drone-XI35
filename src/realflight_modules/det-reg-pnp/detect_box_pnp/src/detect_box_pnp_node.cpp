@@ -204,6 +204,11 @@ int main(int argc, char **argv)
         //maxMarkerPerimeterRate: determine maximum perimeter for marker contour to be detected. This is defined as a rate respect to the maximum dimension of the input image (default 4.0).
         parameters->maxMarkerPerimeterRate=2;
         parameters->cornerRefinementMethod = cv::aruco::CORNER_REFINE_CONTOUR;
+
+        parameters->adaptiveThreshWinSizeMin = 3;
+        parameters->adaptiveThreshWinSizeMax = 5003;
+        parameters->adaptiveThreshWinSizeStep = 1000;
+        parameters->polygonalApproxAccuracyRate = 0.025;
         
         cv::aruco::detectMarkers(img, dictionary, markerCorners_deted, markerids_deted, parameters, rejectedCandidate);
         cv_bridge::CvImage cv_image;
