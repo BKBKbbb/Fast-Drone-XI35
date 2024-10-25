@@ -18,7 +18,8 @@ categories:
 - [2 飞控配置](#2-飞控配置)
 - [3 orin nx 配置](#3-orin-nx-配置)
 - [4 docker 配置与使用](#4-docker-配置与使用)
-- [5 需要注意的问题](#5-需要注意的问题)
+- [5 启动流程](#5-启动流程)
+- [6 需要注意的问题](#6-需要注意的问题)
 - [参考](#参考)
 
 ## 1 机体安装步骤
@@ -283,7 +284,7 @@ sudo nmcli connection up HITADHOC
 sudo nmcli connection delete HITADHOC
 ```
 
-- LCM通信配置
+- LCM通信配置，**每次重启后都需要重新输入**
 ```shell
 sudo ifconfig wlan1 multicast
 sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1
@@ -309,6 +310,9 @@ sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1
 ```shell
 make jetson_base 
 ```
+
+**具体使用见 4.6**
+
 ### 4.2 构建Fast-Drone-XI35工程镜像Dockerfile.jetson
 在Dockerfile.jetson_base的基础上构建，从github上拉取最新的Fast-Drone-XI35并进行编译，加入容器初始化脚本。
 由于dockerhub在国内无法访问，基础环境镜像暂时没有push到远程仓库，通过docker save打包成.tar文件，借助u盘拷贝至宿主机，再通过docker load解压得到基础环境镜像local/fastdronexi35:orin_base_35.3.1。
@@ -369,13 +373,24 @@ docker run -itd --privileged=true --network host \
 ④运行make jetson构建新的工程镜像
 上述操作已集成在"update_jetson.sh"脚本中，当需要进行镜像更新时，直接运行该脚本即可，注意需要宿主机有基础环境镜像（tag为"local/fastdronexi35:orin_base_35.3.1"），否则无法构建。
 ### 4.6 容器部署简要流程
-从构建基础环境镜像到运行容器的整个流程，所有命令在/Docker/Dockerfile目录下执行。
+
+首先 clone 本仓库，之后的从构建基础环境镜像到运行容器的整个流程，所有命令在/Docker/Dockerfile目录下执行。
+
+```shell
+git clone https://github.com/Longer95479/Fast-Drone-XI35.git
+```
+
 - 构建基础环境镜像: local/fastdronexi35:orin_base_35.3.1
 ```shell
 make jetson_base
 docker tag fastdronexi35:orin_base_35.3.1 local/fastdronexi35:orin_base_35.3.1
 ```
-- 构建工程镜像: fastdronexi35:orin
+或者 直接从移动硬盘里加载镜像的 tar 文件
+```shell
+sudo docker load -i fastdronexi35_base.tar
+```
+
+- 在本工程的 `/Docker/Dockerfile`下执行命令，构建工程镜像: fastdronexi35:orin
 ```shell
 make jetson
 ```
@@ -383,7 +398,13 @@ make jetson
 ```shell
 ./container_run.sh
 ```
-- 更新工程镜像
+- 进入容器的 bash
+
+```shell
+sudo docker exec -it  fd_runtime bash
+```
+
+- 如果需要更新工程镜像，则执行
 ```shell
 ./update_jetson.sh
 ```
