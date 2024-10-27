@@ -311,6 +311,14 @@ void PX4CtrlFSM::process()
 	}
 
 	// STEP2: estimate thrust model
+	if (state == AUTO_TAKEOFF) {
+		ros::Time now = ros::Time::now();
+		double delta_t = (now - takeoff_land.toggle_takeoff_land_time).toSec() 
+							- AutoTakeoffLand_t::MOTORS_SPEEDUP_TIME;
+		if (delta_t > 0.2)
+			controller.estimateThrustModel(imu_acc_lpf, param);
+	}
+
 	if (state == AUTO_HOVER || state == CMD_CTRL)
 	{
 		// controller.estimateThrustModel(imu_data.a, bat_data.volt, param);
