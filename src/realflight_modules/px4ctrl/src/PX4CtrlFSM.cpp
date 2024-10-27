@@ -8,6 +8,8 @@ PX4CtrlFSM::PX4CtrlFSM(Parameter_t &param_, LinearControl &controller_) : param(
 {
 	state = MANUAL_CTRL;
 	hover_pose.setZero();
+	imu_acc_lpf.setZero();
+	flag_init_imu_acc_lpf = false;
 }
 
 /* 
@@ -303,20 +305,18 @@ void PX4CtrlFSM::process()
 		break;
 	}
 
+	// STEP1.5: low pass filter for imu acc data
+	if (state == AUTO_TAKEOFF || state == AUTO_HOVER || state == CMD_CTRL) {
+		LPF_imu_a(imu_data.a);
+	}
+
 	// STEP2: estimate thrust model
 	if (state == AUTO_HOVER || state == CMD_CTRL)
 	{
 		// controller.estimateThrustModel(imu_data.a, bat_data.volt, param);
-		// controller.estimateThrustModel(imu_data.a,param);
-		// controller.estimateThrustModelUsingVelFB(odom_data.v,param);
-
-		// LPF: 200 / 2 / PI * 0.78 = fc = 15 Hz
-		static Eigen::Vector3d imu_a_z = imu_data.a;
-		imu_a_z = 0.47 * imu_data.a + (1 - 0.47) * imu_a_z;
-		printf("%6.3f,%6.3f\n", imu_a_z(2), imu_data.a(2));
-		fflush(stdout);
-
-		controller.estimateThrustModel(imu_a_z,param);
+		// controller.estimateThrustModel(imu_data.a, param);
+		// controller.estimateThrustModelUsingVelFB(odom_data.v, param);
+		controller.estimateThrustModel(imu_acc_lpf, param);
 
 	}
 
@@ -670,4 +670,25 @@ void PX4CtrlFSM::reboot_FCU()
 
 	// if (param.print_dbg)
 	// 	printf("reboot result=%d(uint8_t), success=%d(uint8_t)\n", reboot_srv.response.result, reboot_srv.response.success);
+}
+
+
+void PX4CtrlFSM::LPF_imu_a(Eigen::Vector3d &imu_data_acc)
+{
+	if (flag_init_imu_acc_lpf == false) {
+		// LPF：
+		// b = 2 * PI * fc * dt, dt = 1 / fs
+		// a = b / (1 + b)
+		// y[n] = a * x[n] + (1-a) * y[n-1]
+
+		b_lpf = 2 * 3.1415926 * param.thr_map.imu_acc_lpf_freq_cutoff / param.ctrl_freq_max;
+		a_lpf = b_lpf / (1 + b_lpf);
+		printf("%6.3f,%6.3f\n", param.thr_map.imu_acc_lpf_freq_cutoff, a_lpf);	
+
+		imu_acc_lpf = imu_data_acc;
+		flag_init_imu_acc_lpf = true;
+	}
+	imu_acc_lpf = a_lpf * imu_data_acc + (1 - a_lpf) * imu_acc_lpf;
+	// printf("%6.3f,%6.3f\n", imu_acc_lpf(2), imu_data_acc(2));
+	// fflush(stdout);
 }

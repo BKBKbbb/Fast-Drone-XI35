@@ -41,6 +41,11 @@ public:
 	Battery_Data_t bat_data;
 	Takeoff_Land_Data_t takeoff_land_data;
 
+	Eigen::Vector3d imu_acc_lpf;	// output of LPF
+	bool flag_init_imu_acc_lpf;
+	double a_lpf;
+	double b_lpf;
+
 	LinearControl &controller;
 
 	ros::Publisher traj_start_trigger_pub;
@@ -74,6 +79,8 @@ public:
 	bool recv_new_odom();
 	State_t get_state() { return state; }
 	bool get_landed() { return takeoff_land.landed; }
+
+	void LPF_imu_a(Eigen::Vector3d &imu_data_acc);
 
 	//add by bk
 	bool emergency_hover = false;

@@ -100,11 +100,11 @@ LinearControl::calculateControl(const Desired_State_t &des,
   
   // Used for thrust-accel mapping estimation
   timed_thrust_.push(std::pair<ros::Time, double>(ros::Time::now(), u.thrust));
-  timed_vel_.push(odom.v);
+  // timed_vel_.push(odom.v);
   while (timed_thrust_.size() > 100)
   {
     timed_thrust_.pop();
-    timed_vel_.pop();
+    // timed_vel_.pop();
   }
   return debug_msg_;
 }
