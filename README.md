@@ -289,7 +289,12 @@ sudo nmcli connection delete HITADHOC
 sudo ifconfig wlan1 multicast
 sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1
 ```
-  
+
+  ### 3.10 安装 onnxruntime
+
+  ```shell
+pip install onnxruntime
+```
 
 ## 4 Docker 配置与使用
 底层基础镜像：NVIDIA L4T JetPack r35.3.1
