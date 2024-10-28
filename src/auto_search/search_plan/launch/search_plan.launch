@@ -32,8 +32,9 @@
         <param name="target_converge_th" value="0.10" type="double"/>
         <param name="slow_down_time_duration" value="5.0" type="double"/>
         <param name="slow_down_height" value="1.0" type="double"/>
-        <param name="slowdown_forward_dist" value="0.15" type="double"/>
+        <!-- <param name="slowdown_forward_dist" value="0.15" type="double"/> -->
         <param name="my_target_hover_height" value="1.0" type="double"/>
+        <param name="search_hover_type" value="1" type="int"/>
 
         <param name="search_startpoint_x" value="1.0" type="double"/>
         <param name="search_startpoint_y" value="0.0" type="double"/>

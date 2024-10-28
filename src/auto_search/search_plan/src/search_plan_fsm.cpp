@@ -78,7 +78,8 @@ void Search_Plan_FSM::execSearchStage()
       start_time = ros::Time::now();
 
       if (continously_called_times_ == 1) {
-        slow_down_trig_pos = current_Position + current_R_b2w_ * slowdown_forward_vector_;
+        // slow_down_trig_pos = current_Position + current_R_b2w_ * slowdown_forward_vector_;  // longer's slowdown stratege
+        slow_down_trig_pos = current_Position;
         slow_down_trig_pos.z() = slow_down_height_;
       }
     }
@@ -299,12 +300,12 @@ void Search_Plan_FSM::updateOdomCallback(const nav_msgs::OdometryConstPtr &msg)
   current_Position[1] = msg->pose.pose.position.y;
   current_Position[2] = msg->pose.pose.position.z;
 
-  /* get pose */
-  Eigen::Quaterniond body_q = Eigen::Quaterniond(msg->pose.pose.orientation.w,
-                                                 msg->pose.pose.orientation.x,
-                                                 msg->pose.pose.orientation.y,
-                                                 msg->pose.pose.orientation.z);
-  current_R_b2w_ = body_q.toRotationMatrix();
+  // /* get pose for longer's slowdown stratege */
+  // Eigen::Quaterniond body_q = Eigen::Quaterniond(msg->pose.pose.orientation.w,
+  //                                                msg->pose.pose.orientation.x,
+  //                                                msg->pose.pose.orientation.y,
+  //                                                msg->pose.pose.orientation.z);
+  // current_R_b2w_ = body_q.toRotationMatrix();
 
   has_odom_ = true;
 }
@@ -357,12 +358,29 @@ bool Search_Plan_FSM::slowDownServiceCallBack(search_plan::SearchService::Reques
   return true;
 }
 
+void Search_Plan_FSM::slowDownCallback(const std_msgs::BoolConstPtr &msg)
+{
+  if(search_hover_type != 1)
+    return;
+  ROS_WARN("received slowdown msg, %d", msg->data);
+  has_slow_down_req_ = msg->data;
+  if(has_slow_down_req_)
+  {
+    if (main_State == SEARCH_STAGE && search_SubState == SLOWDOWN_FOR_RECOG)
+      reset_slow_down_clock_ = true;
+  }
+}
 
 void Search_Plan_FSM::publishTarget()
 {
   // static int normal_pub_counter = 0;
 
   if (have_trigger) {
+    if(search_hover_type == 1 && (main_State == SEARCH_STAGE && search_SubState == SLOWDOWN_FOR_RECOG))
+    {
+      last_Target = current_Target;
+      return;
+    }
     double dis = (current_Target - last_Target).norm();
     if( dis >= publish_target_threshold_) //新的目标点距离之前的目标点大于 publish_target_threshold_ [m] 才发布新的目标点
     {
@@ -556,8 +574,13 @@ void Search_Plan_FSM::init(ros::NodeHandle& nh)
 
   nh.param<double>("/search_plan_node/slow_down_time_duration", slow_down_time_duration_, 2.0);
   nh.param<double>("/search_plan_node/slow_down_height", slow_down_height_, 0.7);
-  nh.param<double>("/search_plan_node/slowdown_forward_dist", slowdown_forward_dist_, 0.15);
-  slowdown_forward_vector_ << slowdown_forward_dist_, 0.0, 0.0;
+
+  // longer's slowdown stratege
+  // nh.param<double>("/search_plan_node/slowdown_forward_dist", slowdown_forward_dist_, 0.15);
+  // slowdown_forward_vector_ << slowdown_forward_dist_, 0.0, 0.0;
+
+  // px4ctrl auto hover stratege of slowdown
+  nh.param<int>("/search_plan_node/search_hover_type", search_hover_type, 0);
 
   nh.param<double>("/search_plan_node/search_startpoint_x", search_StartPoint.x(), 2.0);
   nh.param<double>("/search_plan_node/search_startpoint_y", search_StartPoint.y(), 0.5);
@@ -577,6 +600,8 @@ void Search_Plan_FSM::init(ros::NodeHandle& nh)
   sub_Odom = nh.subscribe(odom_Topic, 1, &Search_Plan_FSM::updateOdomCallback, this);
   sub_Trigger = nh.subscribe("/traj_start_trigger", 1, &Search_Plan_FSM::triggerCallback, this);
   sub_target_merged = nh.subscribe("/target_merge/target_to_search", 1, &Search_Plan_FSM::targetToSearchCallBack, this);
+  sub_SearchHover = nh.subscribe("/target_merge/search_hover", 1, &Search_Plan_FSM::slowDownCallback, this);
+  
 
   // pub
   pub_Target = nh.advertise<geometry_msgs::PoseStamped>("/search_plan/pos_cmd", 50);
