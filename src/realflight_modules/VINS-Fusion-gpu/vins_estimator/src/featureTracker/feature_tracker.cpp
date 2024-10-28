@@ -122,6 +122,7 @@ map<int, vector<pair<int, Eigen::Matrix<double, 7, 1>>>> FeatureTracker::trackIm
 
     if (prev_pts.size() > 0)
     {
+        ROS_DEBUG("Track features begin!");
         vector<uchar> status;
         if(!USE_GPU_ACC_FLOW)
         {
@@ -257,9 +258,7 @@ map<int, vector<pair<int, Eigen::Matrix<double, 7, 1>>>> FeatureTracker::trackIm
         reduceVector(cur_pts, status);
         reduceVector(ids, status);
         reduceVector(track_cnt, status);
-        // ROS_DEBUG("temporal optical flow costs: %fms", t_o.toc());
-        
-        //printf("track cnt %d\n", (int)ids.size());
+        ROS_DEBUG("track features costs: %fms", t_r.toc());
     }
 
     for (auto &n : track_cnt)
@@ -268,12 +267,12 @@ map<int, vector<pair<int, Eigen::Matrix<double, 7, 1>>>> FeatureTracker::trackIm
     if (1)
     {
         //rejectWithF();
-        ROS_DEBUG("set mask begins");
-        TicToc t_m;
+        // ROS_DEBUG("set mask begins");
+        // TicToc t_m;
         setMask();
         // ROS_DEBUG("set mask costs %fms", t_m.toc());
         // printf("set mask costs %fms\n", t_m.toc());
-        ROS_DEBUG("detect feature begins");
+        // ROS_DEBUG("detect feature begins");
         
         int n_max_cnt = MAX_CNT - static_cast<int>(cur_pts.size());
         if(!USE_GPU)
@@ -327,11 +326,12 @@ map<int, vector<pair<int, Eigen::Matrix<double, 7, 1>>>> FeatureTracker::trackIm
                 n_pts.clear();
         }
 
-        ROS_DEBUG("add feature begins");
-        TicToc t_a;
+        // ROS_DEBUG("add feature begins");
+        // TicToc t_a;
         addPoints();
         // ROS_DEBUG("selectFeature costs: %fms", t_a.toc());
         // printf("selectFeature costs: %fms\n", t_a.toc());
+
     }
 
     cur_un_pts = undistortedPts(cur_pts, m_camera[0]);
@@ -588,7 +588,7 @@ vector<cv::Point2f> FeatureTracker::undistortedPts(vector<cv::Point2f> &pts, cam
     }
     return un_pts;
 }
-
+//计算当前帧相对于前一帧 特征点沿x,y方向的像素移动速度
 vector<cv::Point2f> FeatureTracker::ptsVelocity(vector<int> &ids, vector<cv::Point2f> &pts, 
                                             map<int, cv::Point2f> &cur_id_pts, map<int, cv::Point2f> &prev_id_pts)
 {
@@ -646,7 +646,7 @@ void FeatureTracker::drawTrack(const cv::Mat &imLeft, const cv::Mat &imRight,
     for (size_t j = 0; j < curLeftPts.size(); j++)
     {
         double len = std::min(1.0, 1.0 * track_cnt[j] / 20);
-        cv::circle(imTrack, curLeftPts[j], 2, cv::Scalar(255 * (1 - len), 0, 255 * len), 2);
+        cv::circle(imTrack, curLeftPts[j], 2, cv::Scalar(255 * (1 - len), 0, 255 * len), 2);//追踪次数越多，len越大，特征点越红否则特征点越蓝（cv color顺序是BGR）
     }
     if (!imRight.empty() && stereo_cam)
     {
@@ -730,7 +730,17 @@ void FeatureTracker::removeOutliers(set<int> &removePtsIds)
     reduceVector(ids, status);
     reduceVector(track_cnt, status);
 }
-
+//返回追踪次数超过阈值的特征点数
+int FeatureTracker::getCurrentLongTrackFeatCnt()
+{
+    int res = 0;
+    for(auto cnt : track_cnt)
+    {
+        if(cnt >= USABLE_THRESH_TRACKCNT)
+            res++;
+    }
+    return res;
+}
 
 cv::Mat FeatureTracker::getTrackImage()
 {

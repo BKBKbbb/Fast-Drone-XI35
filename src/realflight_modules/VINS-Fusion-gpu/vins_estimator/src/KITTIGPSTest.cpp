@@ -167,7 +167,7 @@ int main(int argc, char** argv)
 			//printf("pos_accuracy %f \n", pos_accuracy);
 			pubGPS.publish(gps_position);
 
-			estimator.inputImage(imgTime, imLeft, imRight);
+			estimator.inputImage(0, imgTime, imLeft, imRight);
 			
 			Eigen::Matrix<double, 4, 4> pose;
 			estimator.getPoseInWorldFrame(pose);

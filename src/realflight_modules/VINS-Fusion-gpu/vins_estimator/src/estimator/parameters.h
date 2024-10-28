@@ -21,8 +21,8 @@
 using namespace std;
 
 const double FOCAL_LENGTH = 460.0;
-const int WINDOW_SIZE = 10;
-const int NUM_OF_F = 1000;
+const int WINDOW_SIZE = 25;//
+const int NUM_OF_F = 2500;
 //#define UNIT_SPHERE_ERROR
 
 extern double INIT_DEPTH;
@@ -60,7 +60,8 @@ extern Eigen::Matrix3d rectify_R_right;
 // pts_gt for debug purpose;
 extern map<int, Eigen::Vector3d> pts_gt;
 
-extern std::string IMAGE0_TOPIC, IMAGE1_TOPIC;
+extern std::string IMAGE0_TOPIC, IMAGE1_TOPIC, IMAGE2_TOPIC;
+extern std::vector<std::string> IMAGES_TOPIC;
 extern std::string FISHEYE_MASK;
 extern std::vector<std::string> CAM_NAMES;
 extern int MAX_CNT;
@@ -69,9 +70,21 @@ extern double F_THRESHOLD;
 extern int SHOW_TRACK;
 extern int FLOW_BACK;
 
+extern double STEREO_FREQ, MONO_FREQ;
+
 extern int ODOM_TYPE;
 extern int DRONE_ID;
 extern double SINGLE_OFFSET;
+
+extern int STEREO_NUM;
+extern int MONO_NUM;
+extern int FRONTEND_NUM;
+extern int USABLE_THRESH_FEATCNT;
+extern int USABLE_THRESH_TRACKCNT;
+extern int INITIALIZED_THRESH;
+extern int RESET_THRESH;
+extern double PROCESS_INTERVAL_THRESH;
+
 void readParameters(std::string config_file);
 
 enum SIZE_PARAMETERIZATION

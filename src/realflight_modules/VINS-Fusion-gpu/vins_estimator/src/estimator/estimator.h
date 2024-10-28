@@ -47,11 +47,15 @@ class Estimator
     // interface
     void initFirstPose(Eigen::Vector3d p, Eigen::Matrix3d r);
     void inputIMU(double t, const Vector3d &linearAcceleration, const Vector3d &angularVelocity);
-    void inputFeature(double t, const map<int, vector<pair<int, Eigen::Matrix<double, 7, 1>>>> &featureFrame);
-    void inputImage(double t, const cv::Mat &_img, const cv::Mat &_img1 = cv::Mat());
+    void inputFeature(int frontId, double t, const map<int, vector<pair<int, Eigen::Matrix<double, 7, 1>>>> &featureFrame);
+    void inputImage(int frontId, double t, const cv::Mat &_img, const cv::Mat &_img1 = cv::Mat());
     void processIMU(double t, double dt, const Vector3d &linear_acceleration, const Vector3d &angular_velocity);
-    void processImage(const map<int, vector<pair<int, Eigen::Matrix<double, 7, 1>>>> &image, const double header);
+    void processImage(const vector<pair<int, map<int, vector<pair<int, Eigen::Matrix<double, 7, 1>>>>>> &images, const double header);
     void processMeasurements();
+    //adjust multicamera
+    pair<bool, int> isFeatureBufAvailable();
+    bool isFeatureBufAvailable();
+    int getFrontIdFromBuf();
 
     // internal
     void clearState();
@@ -59,26 +63,36 @@ class Estimator
     bool visualInitialAlign();
     bool relativePose(Matrix3d &relative_R, Vector3d &relative_T, int &l);
     void slideWindow();
-    void slideWindowNew();
-    void slideWindowOld();
-    void optimization();
-    void vector2double();
-    void double2vector();
-    bool failureDetection();
+    void slideWindowNew(set<int> mergeFrontId, vector<int> local_idx);
+    void slideWindowOld(set<int> mergeFrontId);
+    vector<int> getLastFrontId();
+    void multiCamIdxPushBack(vector<int> add_id, int add_frame_idx);
+    vector<int> multiCamIdxSlideOld();
+    pair<vector<int>, vector<int>> multiCamIdxSlideNew(int merge_frame_idx);
+    int getExParamIdx(int frontId) const;
+    int getWindowSize(int frontId) const;
+    int fromGlobalIndex2Local(const vector<int> &local_window, int global_index);
+    void printMultiCamIdx();
+    void optimization(const vector<int> &frontId);
+    void vector2double(const vector<int> &frontId);
+    void double2vector(const vector<int> &frontId);
+    bool failureDetection(int frontId);
     bool getIMUInterval(double t0, double t1, vector<pair<double, Eigen::Vector3d>> &accVector, 
                                               vector<pair<double, Eigen::Vector3d>> &gyrVector);
     void getPoseInWorldFrame(Eigen::Matrix4d &T);
     void getPoseInWorldFrame(int index, Eigen::Matrix4d &T);
-    void predictPtsInNextFrame();
-    void outliersRejection(set<int> &removeIndex);
+    void predictPtsInNextFrame(int frontId);
+    void outliersRejection(int frontId, set<int> &removeIndex);
     double reprojectionError(Matrix3d &Ri, Vector3d &Pi, Matrix3d &rici, Vector3d &tici,
                                      Matrix3d &Rj, Vector3d &Pj, Matrix3d &ricj, Vector3d &ticj, 
                                      double depth, Vector3d &uvi, Vector3d &uvj);
-    void updateLatestStates();
+    void updateLatestStates(int latest_frontId);
     void fastPredictIMU(double t, Eigen::Vector3d linear_acceleration, Eigen::Vector3d angular_velocity);
     bool IMUAvailable(double t);
     void initFirstIMUPose(vector<pair<double, Eigen::Vector3d>> &accVector);
 
+    void frontStateInit();
+    vector<int> getGoodFrontId();
     enum SolverFlag
     {
         INITIAL,
@@ -90,32 +104,63 @@ class Estimator
         MARGIN_OLD = 0,
         MARGIN_SECOND_NEW = 1
     };
+    //记录前端的状态信息
+    struct FrontState
+    {
+        FrontState(bool _is_stereo):is_stereo(_is_stereo)
+        {
+            if(_is_stereo)
+                usable = true;//双目初始化为可用
+            else
+                usable = false;
+            initialized = false;
+        }
+        void reset()
+        {
+            usable = false;
+            if(!is_stereo)
+                initialized = false;
+        }
+        bool is_stereo;
+        bool usable;
+        bool initialized;//单目是否完成初始化
+    };
+    vector<FrontState> frontStateVec;
+    vector<double> lastProcessTime;//记录各前端上一次被处理的时间
+    int usable2InitializedThresh;//可用到完成初始化的连续特征点数量阈值
+    int resetThresh;//重置前端的连续特征点数量阈值
 
-    std::mutex mBuf;
+    std::mutex mBuf;//多个前端共用一个mutex
     queue<pair<double, Eigen::Vector3d>> accBuf;
     queue<pair<double, Eigen::Vector3d>> gyrBuf;
-    queue<pair<double, map<int, vector<pair<int, Eigen::Matrix<double, 7, 1> > > > > > featureBuf;
+    vector<queue<pair<double, map<int, vector<pair<int, Eigen::Matrix<double, 7, 1> > > > > > > featureBuf;
     double prevTime, curTime;
     bool openExEstimation;
 
     std::thread trackThread;
     std::thread processThread;
 
-    FeatureTracker featureTracker;
+    vector<FeatureTracker> featureTracker;//FRONTEND_NUM个前端
 
     SolverFlag solver_flag;
     MarginalizationFlag  marginalization_flag;
     Vector3d g;
 
-    Matrix3d ric[2];
-    Vector3d tic[2];
+    Matrix3d ric[4];//预留到4个
+    Vector3d tic[4];
 
     Vector3d        Ps[(WINDOW_SIZE + 1)];
     Vector3d        Vs[(WINDOW_SIZE + 1)];
     Matrix3d        Rs[(WINDOW_SIZE + 1)];
     Vector3d        Bas[(WINDOW_SIZE + 1)];
     Vector3d        Bgs[(WINDOW_SIZE + 1)];
-    double td;
+    
+    vector<double> td;
+    
+    //多前端索引映射矩阵
+    vector<vector<int>> multicam_frame_idx;
+    //同步帧索引矩阵 
+    vector<vector<int>> sync_frame_idx;
 
     Matrix3d back_R0, last_R, last_R0;
     Vector3d back_P0, last_P, last_P0;
@@ -131,10 +176,11 @@ class Estimator
     int frame_count;
     int sum_of_outlier, sum_of_back, sum_of_front, sum_of_invalid;
     int inputImageCnt;
+    vector<int> inputImageCntPerCam;//记录接收的图像帧数
     float sum_t_feature;
     int begin_time_count;
 
-    FeatureManager f_manager;
+    vector<FeatureManager> f_manager;//FRONTEND_NUM个特征点管理器
     MotionEstimator m_estimator;
     InitialEXRotation initial_ex_rotation;
 
@@ -150,10 +196,10 @@ class Estimator
 
     double para_Pose[WINDOW_SIZE + 1][SIZE_POSE];
     double para_SpeedBias[WINDOW_SIZE + 1][SIZE_SPEEDBIAS];
-    double para_Feature[NUM_OF_F][SIZE_FEATURE];
-    double para_Ex_Pose[2][SIZE_POSE];
+    double para_Feature[3][NUM_OF_F][SIZE_FEATURE];//支持3个前端
+    double para_Ex_Pose[4][SIZE_POSE];//1个双目+2个单目
     double para_Retrive_Pose[SIZE_POSE];
-    double para_Td[1][1];
+    double para_Td[3][1];//支持3个前端
     double para_Tr[1][1];
 
     int loop_window_index;
@@ -172,4 +218,9 @@ class Estimator
     Eigen::Quaterniond latest_Q;
 
     bool initFirstPoseFlag;
+    int mergeNewFrameIdx;//边缘化次新帧的全局id
+
+    double first_image_time[3];
+    bool first_image_flag[3] = {false};
+
 };

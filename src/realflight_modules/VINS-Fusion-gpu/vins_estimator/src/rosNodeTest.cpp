@@ -15,11 +15,13 @@
 #include <thread>
 #include <mutex>
 #include <ros/ros.h>
+#include <ros/master.h>
 #include <cv_bridge/cv_bridge.h>
 #include <opencv2/opencv.hpp>
 #include "estimator/estimator.h"
 #include "estimator/parameters.h"
 #include "utility/visualization.h"
+#include "thread_pool/ThreadPool.h"
 
 Estimator estimator;
 
@@ -27,24 +29,54 @@ queue<sensor_msgs::ImuConstPtr> imu_buf;
 queue<sensor_msgs::PointCloudConstPtr> feature_buf;
 queue<sensor_msgs::ImageConstPtr> img0_buf;
 queue<sensor_msgs::ImageConstPtr> img1_buf;
-std::mutex m_buf;
+//multi
+vector<queue<sensor_msgs::ImageConstPtr>> img_buf;
+vector<std::mutex> m_buf;
 
+class Image_Callback
+{
+public:
+    Image_Callback(){}
+    Image_Callback(int _frontend_id, int _cam_id): frontend_id(_frontend_id), cam_id(_cam_id){}
+
+    void init(int _frontend_id, int _cam_id)
+    {
+        frontend_id = _frontend_id;
+        cam_id = _cam_id;
+    }
+    void operator()(const sensor_msgs::ImageConstPtr &img_msg)
+    {
+        m_buf[frontend_id].lock();
+        img_buf[cam_id].push(img_msg);
+        m_buf[frontend_id].unlock();
+    }
+private:
+    int frontend_id;
+    int cam_id;
+};
+
+void img_callback(int frontend_id, int cam_id, const sensor_msgs::ImageConstPtr &img_msg)
+{
+    m_buf[frontend_id].lock();
+    img_buf[cam_id].push(img_msg);
+    m_buf[frontend_id].unlock();
+}
 
 void img0_callback(const sensor_msgs::ImageConstPtr &img_msg)
 {
-    m_buf.lock();
+    m_buf[0].lock();
     img0_buf.push(img_msg);
-    m_buf.unlock();
+    m_buf[0].unlock();
 }
 
 void img1_callback(const sensor_msgs::ImageConstPtr &img_msg)
 {
-    m_buf.lock();
+    m_buf[0].lock();
     img1_buf.push(img_msg);
-    m_buf.unlock();
+    m_buf[0].unlock();
 }
 
-
+//sensor_msgs::Image ==> cv::Mat
 cv::Mat getImageFromMsg(const sensor_msgs::ImageConstPtr &img_msg)
 {
     cv_bridge::CvImageConstPtr ptr;
@@ -68,68 +100,79 @@ cv::Mat getImageFromMsg(const sensor_msgs::ImageConstPtr &img_msg)
 }
 
 // extract images with same timestamp from two topics
-void sync_process()
+//adjust multi camera
+void sync_process(bool is_stereo, int frontEndId)
 {
     while(1)
     {
-        if(STEREO)
+        if(is_stereo)
         {
+            int left_idx = frontEndId * 2;
+            int right_idx = left_idx + 1;
             cv::Mat image0, image1;
             std_msgs::Header header;
             double time = 0;
-            m_buf.lock();
-            if (!img0_buf.empty() && !img1_buf.empty())
+            m_buf[frontEndId].lock();
+            if (!img_buf[left_idx].empty() && !img_buf[right_idx].empty())
             {
-                double time0 = img0_buf.front()->header.stamp.toSec();
-                double time1 = img1_buf.front()->header.stamp.toSec();
+                double time0 = img_buf[left_idx].front()->header.stamp.toSec();
+                double time1 = img_buf[right_idx].front()->header.stamp.toSec();
                 if(time0 < time1)
                 {
-                    img0_buf.pop();
+                    img_buf[left_idx].pop();
                     printf("throw img0\n");
                 }
                 else if(time0 > time1)
                 {
-                    img1_buf.pop();
+                    img_buf[right_idx].pop();
                     printf("throw img1\n");
                 }
                 else
                 {
-                    time = img0_buf.front()->header.stamp.toSec();
-                    header = img0_buf.front()->header;
-                    image0 = getImageFromMsg(img0_buf.front());
-                    img0_buf.pop();
-                    image1 = getImageFromMsg(img1_buf.front());
-                    img1_buf.pop();
+                    time = img_buf[left_idx].front()->header.stamp.toSec();
+                    header = img_buf[left_idx].front()->header;
+                    image0 = getImageFromMsg(img_buf[left_idx].front());
+                    img_buf[left_idx].pop();
+                    image1 = getImageFromMsg(img_buf[right_idx].front());
+                    img_buf[right_idx].pop();
                     //printf("find img0 and img1\n");
                 }
             }
-            m_buf.unlock();
+            m_buf[frontEndId].unlock();
             if(!image0.empty())
-                estimator.inputImage(time, image0, image1);
+            {
+                ROS_DEBUG("Input stereo images!");
+                estimator.inputImage(frontEndId, time, image0, image1);
+                
+            }
         }
         else
         {
+            int mono_idx = STEREO_NUM + frontEndId;
             cv::Mat image;
             std_msgs::Header header;
             double time = 0;
-            m_buf.lock();
-            if(!img0_buf.empty())
+            m_buf[frontEndId].lock();
+            if(!img_buf[mono_idx].empty())
             {
-                time = img0_buf.front()->header.stamp.toSec();
-                header = img0_buf.front()->header;
-                image = getImageFromMsg(img0_buf.front());
-                img0_buf.pop();
+                time = img_buf[mono_idx].front()->header.stamp.toSec();
+                header = img_buf[mono_idx].front()->header;
+                image = getImageFromMsg(img_buf[mono_idx].front());
+                img_buf[mono_idx].pop();
             }
-            m_buf.unlock();
+            m_buf[frontEndId].unlock();
             if(!image.empty())
-                estimator.inputImage(time, image);
+            {
+                ROS_DEBUG("Input mono images!");
+                estimator.inputImage(frontEndId, time, image);
+                
+            }
         }
 
         std::chrono::milliseconds dura(2);
         std::this_thread::sleep_for(dura);
     }
 }
-
 
 void imu_callback(const sensor_msgs::ImuConstPtr &imu_msg)
 {
@@ -175,7 +218,7 @@ void feature_callback(const sensor_msgs::PointCloudConstPtr &feature_msg)
         featureFrame[feature_id].emplace_back(camera_id,  xyz_uv_velocity);
     }
     double t = feature_msg->header.stamp.toSec();
-    estimator.inputFeature(t, featureFrame);
+    estimator.inputFeature(0, t, featureFrame);
     return;
 }
 
@@ -184,12 +227,12 @@ void restart_callback(const std_msgs::BoolConstPtr &restart_msg)
     if (restart_msg->data == true)
     {
         ROS_WARN("restart the estimator!");
-        m_buf.lock();
+        m_buf[0].lock();
         while(!feature_buf.empty())
             feature_buf.pop();
         while(!imu_buf.empty())
             imu_buf.pop();
-        m_buf.unlock();
+        m_buf[0].unlock();
         estimator.clearState();
         estimator.setParameter();
     }
@@ -216,6 +259,9 @@ int main(int argc, char **argv)
     readParameters(config_file);
     estimator.setParameter();
 
+    img_buf = vector<queue<sensor_msgs::ImageConstPtr>>(NUM_OF_CAM);
+    m_buf = vector<std::mutex>(FRONTEND_NUM);
+
 #ifdef EIGEN_DONT_PARALLELIZE
     ROS_DEBUG("EIGEN_DONT_PARALLELIZE");
 #endif
@@ -224,13 +270,31 @@ int main(int argc, char **argv)
 
     registerPub(n);
 
-    ros::Subscriber sub_imu = n.subscribe(IMU_TOPIC, 2000, imu_callback, ros::TransportHints().tcpNoDelay());
+    ros::Subscriber sub_imu = n.subscribe(IMU_TOPIC, 20000, imu_callback, ros::TransportHints().tcpNoDelay());
     ros::Subscriber sub_feature = n.subscribe("/feature_tracker/feature", 2000, feature_callback);
-    ros::Subscriber sub_img0 = n.subscribe(IMAGE0_TOPIC, 100, img0_callback);
-    ros::Subscriber sub_img1 = n.subscribe(IMAGE1_TOPIC, 100, img1_callback);
-
-    std::thread sync_thread{sync_process};
+    
+    //initialize sub_img
+    ros::Subscriber sub_img[NUM_OF_CAM];
+    for(int i = 0; i < NUM_OF_CAM; i++)
+    {
+        int frontend_id;
+        if(i < STEREO_NUM*2)
+            frontend_id = i/2;
+        else
+            frontend_id = i - STEREO_NUM;
+        sub_img[i] = n.subscribe<sensor_msgs::Image>(IMAGES_TOPIC[i], 2000, boost::bind(&img_callback, frontend_id, i, _1));
+    }
+    //init thread_pool
+    ThreadPool pool(FRONTEND_NUM);
+    pool.init();
+    for(int i = 0; i < FRONTEND_NUM; i++)
+    {
+        if(i < STEREO_NUM)
+            pool.submit(sync_process, true, i);
+        else
+            pool.submit(sync_process, false, i);
+    }
     ros::spin();
-
+    pool.shutdown();
     return 0;
 }

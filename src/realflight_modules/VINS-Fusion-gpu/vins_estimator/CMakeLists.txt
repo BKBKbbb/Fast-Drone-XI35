@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(vins)
 
 set(CMAKE_BUILD_TYPE "Release")
+#set(CMAKE_BUILD_TYPE "Debug")
 #set(CMAKE_CXX_FLAGS "-std=c++11")
 set(CMAKE_CXX_STANDARD 14)
 #-DEIGEN_USE_MKL_ALL")
@@ -16,7 +17,8 @@ find_package(catkin REQUIRED COMPONENTS
     tf
     cv_bridge_454
     camera_models
-    image_transport)
+    image_transport
+    thread_pool)
 
 set(OpenCV_DIR /usr/local/opencv-4.5.4/lib/cmake/opencv4)
 find_package(OpenCV REQUIRED)

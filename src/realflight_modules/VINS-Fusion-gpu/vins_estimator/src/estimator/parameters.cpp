@@ -41,19 +41,32 @@ int USE_GPU_ACC_FLOW;
 int PUB_RECTIFY;
 Eigen::Matrix3d rectify_R_left;
 Eigen::Matrix3d rectify_R_right;
+Eigen::Matrix3d rectify_R_downward;
 map<int, Eigen::Vector3d> pts_gt;
-std::string IMAGE0_TOPIC, IMAGE1_TOPIC;
+std::string IMAGE0_TOPIC, IMAGE1_TOPIC, IMAGE2_TOPIC;
+std::vector<std::string> IMAGES_TOPIC;
 std::string FISHEYE_MASK;
-std::vector<std::string> CAM_NAMES;
+std::vector<std::string> CAM_NAMES;//各相机的配置文件
 int MAX_CNT;
 int MIN_DIST;
 double F_THRESHOLD;
 int SHOW_TRACK;
 int FLOW_BACK;
+double STEREO_FREQ, MONO_FREQ;
 
 int ODOM_TYPE;
 int DRONE_ID;
 double SINGLE_OFFSET;
+
+//vins-multi
+int STEREO_NUM;
+int MONO_NUM;
+int FRONTEND_NUM;
+int USABLE_THRESH_FEATCNT;
+int USABLE_THRESH_TRACKCNT;
+int INITIALIZED_THRESH;
+int RESET_THRESH;
+double PROCESS_INTERVAL_THRESH;
 
 template <typename T>
 T readParam(ros::NodeHandle &n, std::string name)
@@ -88,7 +101,11 @@ void readParameters(std::string config_file)
     }
 
     fsSettings["image0_topic"] >> IMAGE0_TOPIC;
+    IMAGES_TOPIC.push_back(IMAGE0_TOPIC);
     fsSettings["image1_topic"] >> IMAGE1_TOPIC;
+    IMAGES_TOPIC.push_back(IMAGE1_TOPIC);
+    fsSettings["image2_topic"] >> IMAGE2_TOPIC;
+    IMAGES_TOPIC.push_back(IMAGE2_TOPIC);
     MAX_CNT = fsSettings["max_cnt"];
     MIN_DIST = fsSettings["min_dist"];
     F_THRESHOLD = fsSettings["F_threshold"];
@@ -153,11 +170,11 @@ void readParameters(std::string config_file)
     NUM_OF_CAM = fsSettings["num_of_cam"];
     printf("camera number %d\n", NUM_OF_CAM);
 
-    if(NUM_OF_CAM != 1 && NUM_OF_CAM != 2)
-    {
-        printf("num_of_cam should be 1 or 2\n");
-        assert(0);
-    }
+    // if(NUM_OF_CAM != 1 && NUM_OF_CAM != 2)
+    // {
+    //     printf("num_of_cam should be 1 or 2\n");
+    //     assert(0);
+    // }
 
 
     int pn = config_file.find_last_of('/');
@@ -166,16 +183,16 @@ void readParameters(std::string config_file)
     std::string cam0Calib;
     fsSettings["cam0_calib"] >> cam0Calib;
     std::string cam0Path = configPath + "/" + cam0Calib;
-    CAM_NAMES.push_back(cam0Path);
+    CAM_NAMES.push_back(cam0Path);//left.yaml
 
-    if(NUM_OF_CAM == 2)
+    if(NUM_OF_CAM >= 2)
     {
         STEREO = 1;
         std::string cam1Calib;
         fsSettings["cam1_calib"] >> cam1Calib;
         std::string cam1Path = configPath + "/" + cam1Calib; 
         //printf("%s cam1 path\n", cam1Path.c_str() );
-        CAM_NAMES.push_back(cam1Path);
+        CAM_NAMES.push_back(cam1Path);//right.yaml
         
         cv::Mat cv_T;
         fsSettings["body_T_cam1"] >> cv_T;
@@ -183,8 +200,21 @@ void readParameters(std::string config_file)
         cv::cv2eigen(cv_T, T);
         RIC.push_back(T.block<3, 3>(0, 0));
         TIC.push_back(T.block<3, 1>(0, 3));
-        fsSettings["publish_rectify"] >> PUB_RECTIFY;
+
+        //mono config
+        std::string cam2Calib;
+        fsSettings["cam2_calib"] >> cam2Calib;
+        std::string cam2Path = configPath + "/" + cam2Calib; 
+        CAM_NAMES.push_back(cam2Path);//mono_downward.yaml
+        
+        cv::Mat cv_T_mono;
+        fsSettings["body_T_cam2"] >> cv_T_mono;
+        Eigen::Matrix4d T_mono;
+        cv::cv2eigen(cv_T_mono, T_mono);
+        RIC.push_back(T_mono.block<3, 3>(0, 0));
+        TIC.push_back(T_mono.block<3, 1>(0, 3));
     }
+    fsSettings["publish_rectify"] >> PUB_RECTIFY;
 
     INIT_DEPTH = 5.0;
     BIAS_ACC_THRESHOLD = 0.1;
@@ -211,14 +241,30 @@ void readParameters(std::string config_file)
     {
         cv::Mat rectify_left;
         cv::Mat rectify_right;
+        cv::Mat rectify_mono_downward;
         fsSettings["cam0_rectify"] >> rectify_left;
         fsSettings["cam1_rectify"] >> rectify_right;
+        fsSettings["cam2_rectify"] >> rectify_mono_downward;
+
         cv::cv2eigen(rectify_left, rectify_R_left);
         cv::cv2eigen(rectify_right, rectify_R_right);
-
+        cv::cv2eigen(rectify_mono_downward, rectify_R_downward);
     }
+    STEREO_FREQ = fsSettings["freq"];
+    MONO_FREQ = fsSettings["mono_freq"];
+
     ODOM_TYPE = fsSettings["odometry_type"];
     DRONE_ID = fsSettings["drone_id"];
     SINGLE_OFFSET = fsSettings["single_offset"];
+
+    STEREO_NUM = fsSettings["stereo_num"];
+    MONO_NUM = fsSettings["mono_num"];
+    FRONTEND_NUM = STEREO_NUM + MONO_NUM;
+
+    USABLE_THRESH_FEATCNT = fsSettings["usable_thresh_feature_cnt"];
+    USABLE_THRESH_TRACKCNT = fsSettings["usable_thresh_track_cnt"];
+    INITIALIZED_THRESH = fsSettings["initialized_thresh"];
+    RESET_THRESH = fsSettings["reset_thresh"];
+    PROCESS_INTERVAL_THRESH = fsSettings["image_process_interval_thres"];
     fsSettings.release();
 }

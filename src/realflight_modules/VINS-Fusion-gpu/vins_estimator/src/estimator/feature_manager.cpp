@@ -9,21 +9,33 @@
 
 #include "feature_manager.h"
 
-int FeaturePerId::endFrame()
+int FeaturePerId::endFrame_local()
 {
-    return start_frame + feature_per_frame.size() - 1;
+    return start_frame_local + feature_per_frame.size() - 1;
+}
+int FeaturePerId::endFrame_global(const vector<int> &global_frame_idx)
+{
+    return global_frame_idx[start_frame_local + feature_per_frame.size() - 1];
 }
 
-FeatureManager::FeatureManager(Matrix3d _Rs[])
-    : Rs(_Rs)
+// FeatureManager::FeatureManager(Matrix3d _Rs[])
+//     : Rs(_Rs)
+// {
+//     for (int i = 0; i < cam_num; i++)
+//         ric[i].setIdentity();
+// }
+void FeatureManager::init(int _frontId, bool _is_stereo, Matrix3d _Rs[])
 {
-    for (int i = 0; i < NUM_OF_CAM; i++)
+    frontId = _frontId;
+    is_stereo = _is_stereo;
+    cam_num = is_stereo? 2 : 1;
+    for(int i = 0; i < cam_num; i++)
         ric[i].setIdentity();
+    Rs = _Rs;
 }
-
 void FeatureManager::setRic(Matrix3d _ric[])
 {
-    for (int i = 0; i < NUM_OF_CAM; i++)
+    for (int i = 0; i < cam_num; i++)
     {
         ric[i] = _ric[i];
     }
@@ -33,7 +45,7 @@ void FeatureManager::clearState()
 {
     feature.clear();
 }
-
+//统计被4帧以上观测到的特征点
 int FeatureManager::getFeatureCount()
 {
     int cnt = 0;
@@ -47,11 +59,20 @@ int FeatureManager::getFeatureCount()
     }
     return cnt;
 }
-
-
-bool FeatureManager::addFeatureCheckParallax(int frame_count, const map<int, vector<pair<int, Eigen::Matrix<double, 7, 1>>>> &image, double td)
+//将全局滑窗索引转换为局部窗口索引
+int FeatureManager::fromGlobalIndex2Local(const vector<int> &local_window, int global_index)
 {
-    ROS_DEBUG("input feature: %d", (int)image.size());
+    for(int i = 0; i < local_window.size(); i++)
+    {
+        if(local_window[i] == global_index)
+            return i;
+    }
+    return -1;//not found
+}
+//注意global_frame_idx是在更新后的
+bool FeatureManager::addFeatureCheckParallax(int frame_count, const map<int, vector<pair<int, Eigen::Matrix<double, 7, 1>>>> &image, double td, const vector<int> &global_frame_idx)
+{
+    ROS_DEBUG("f_manager-%d input feature: %d", frontId, (int)image.size());
     ROS_DEBUG("num of feature: %d", getFeatureCount());
     double parallax_sum = 0;
     int parallax_num = 0;
@@ -59,6 +80,7 @@ bool FeatureManager::addFeatureCheckParallax(int frame_count, const map<int, vec
     last_average_parallax = 0;
     new_feature_num = 0;
     long_track_num = 0;
+    int local_cur_frame = fromGlobalIndex2Local(global_frame_idx, frame_count);//当前帧在局部窗口的索引
     for (auto &id_pts : image)
     {
         FeaturePerFrame f_per_fra(id_pts.second[0].second, td);
@@ -77,7 +99,8 @@ bool FeatureManager::addFeatureCheckParallax(int frame_count, const map<int, vec
 
         if (it == feature.end())
         {
-            feature.push_back(FeaturePerId(feature_id, frame_count));
+            int start_frame_local = local_cur_frame;
+            feature.push_back(FeaturePerId(feature_id, frame_count, start_frame_local));
             feature.back().feature_per_frame.push_back(f_per_fra);
             new_feature_num++;
         }
@@ -92,15 +115,16 @@ bool FeatureManager::addFeatureCheckParallax(int frame_count, const map<int, vec
 
     //if (frame_count < 2 || last_track_num < 20)
     //if (frame_count < 2 || last_track_num < 20 || new_feature_num > 0.5 * last_track_num)
-    if (frame_count < 2 || last_track_num < 20 || long_track_num < 40 || new_feature_num > 0.5 * last_track_num)
+    if (local_cur_frame < 2 || last_track_num < 20 || long_track_num < 40 || new_feature_num > 0.5 * last_track_num)//特征点稀少的地方每一帧都是关键帧
         return true;
 
     for (auto &it_per_id : feature)
     {
-        if (it_per_id.start_frame <= frame_count - 2 &&
-            it_per_id.start_frame + int(it_per_id.feature_per_frame.size()) - 1 >= frame_count - 1)
+        int start_frame_local = fromGlobalIndex2Local(global_frame_idx, it_per_id.start_frame);//转化为局部索引
+        if (start_frame_local <= local_cur_frame - 2 &&
+            start_frame_local + int(it_per_id.feature_per_frame.size()) - 1 >= local_cur_frame - 1)
         {
-            parallax_sum += compensatedParallax2(it_per_id, frame_count);
+            parallax_sum += compensatedParallax2(it_per_id, frame_count, global_frame_idx);
             parallax_num++;
         }
     }
@@ -117,17 +141,17 @@ bool FeatureManager::addFeatureCheckParallax(int frame_count, const map<int, vec
         return parallax_sum / parallax_num >= MIN_PARALLAX;
     }
 }
-
-vector<pair<Vector3d, Vector3d>> FeatureManager::getCorresponding(int frame_count_l, int frame_count_r)
+//adjust the multicam，input the local index
+vector<pair<Vector3d, Vector3d>> FeatureManager::getCorresponding(int frame_count_l_local, int frame_count_r_local)
 {
     vector<pair<Vector3d, Vector3d>> corres;
     for (auto &it : feature)
     {
-        if (it.start_frame <= frame_count_l && it.endFrame() >= frame_count_r)
+        if (it.start_frame_local <= frame_count_l_local && it.endFrame_local() >= frame_count_r_local)
         {
             Vector3d a = Vector3d::Zero(), b = Vector3d::Zero();
-            int idx_l = frame_count_l - it.start_frame;
-            int idx_r = frame_count_r - it.start_frame;
+            int idx_l = frame_count_l_local - it.start_frame_local;
+            int idx_r = frame_count_r_local - it.start_frame_local;
 
             a = it.feature_per_frame[idx_l].point;
 
@@ -211,7 +235,7 @@ void FeatureManager::triangulatePoint(Eigen::Matrix<double, 3, 4> &Pose0, Eigen:
     point_3d(2) = triangulated_point(2) / triangulated_point(3);
 }
 
-
+// 求解新图像的位姿 w_T_cam
 bool FeatureManager::solvePoseByPnP(Eigen::Matrix3d &R, Eigen::Vector3d &P, 
                                       vector<cv::Point2f> &pts2D, vector<cv::Point3f> &pts3D)
 {
@@ -255,11 +279,14 @@ bool FeatureManager::solvePoseByPnP(Eigen::Matrix3d &R, Eigen::Vector3d &P,
 
     return true;
 }
-
-void FeatureManager::initFramePoseByPnP(int frameCnt, Vector3d Ps[], Matrix3d Rs[], Vector3d tic[], Matrix3d ric[])
+// 有了深度，当下一帧照片来到以后就可以利用pnp求解位姿了
+// Ps, Rs, tic, ric是得到的结果
+//没有具有深度的特征点时，该函数等于没有执行
+//adjust the multicam
+void FeatureManager::initFramePoseByPnP(int frameCnt, Vector3d Ps[], Matrix3d Rs[], Vector3d tic[], Matrix3d ric[], const vector<int> &global_frame_idx)
 {
-
-    if(frameCnt > 0)
+    int frameCnt_local = fromGlobalIndex2Local(global_frame_idx, frameCnt);
+    if(frameCnt_local > 0)
     {
         vector<cv::Point2f> pts2D;
         vector<cv::Point3f> pts3D;
@@ -267,7 +294,7 @@ void FeatureManager::initFramePoseByPnP(int frameCnt, Vector3d Ps[], Matrix3d Rs
         {
             if (it_per_id.estimated_depth > 0)
             {
-                int index = frameCnt - it_per_id.start_frame;
+                int index = frameCnt_local - it_per_id.start_frame_local;
                 if((int)it_per_id.feature_per_frame.size() >= index + 1)
                 {
                     Vector3d ptsInCam = ric[0] * (it_per_id.feature_per_frame[0].point * it_per_id.estimated_depth) + tic[0];
@@ -298,16 +325,17 @@ void FeatureManager::initFramePoseByPnP(int frameCnt, Vector3d Ps[], Matrix3d Rs
         }
     }
 }
-
-void FeatureManager::triangulate(int frameCnt, Vector3d Ps[], Matrix3d Rs[], Vector3d tic[], Matrix3d ric[])
+//adjust the multicam
+void FeatureManager::triangulate(int frameCnt, Vector3d Ps[], Matrix3d Rs[], Vector3d tic[], Matrix3d ric[], const vector<int> &global_frame_idx)
 {
+    int frameCnt_local = fromGlobalIndex2Local(global_frame_idx, frameCnt);
     for (auto &it_per_id : feature)
     {
         if (it_per_id.estimated_depth > 0)
             continue;
 
-        if(STEREO && it_per_id.feature_per_frame[0].is_stereo)
-        {
+        if(is_stereo && it_per_id.feature_per_frame[0].is_stereo)
+        {//双目三角化
             int imu_i = it_per_id.start_frame;
             Eigen::Matrix<double, 3, 4> leftPose;
             Eigen::Vector3d t0 = Ps[imu_i] + Rs[imu_i] * tic[0];
@@ -346,7 +374,7 @@ void FeatureManager::triangulate(int frameCnt, Vector3d Ps[], Matrix3d Rs[], Vec
             continue;
         }
         else if(it_per_id.feature_per_frame.size() > 1)
-        {
+        {//相邻帧三角化
             int imu_i = it_per_id.start_frame;
             Eigen::Matrix<double, 3, 4> leftPose;
             Eigen::Vector3d t0 = Ps[imu_i] + Rs[imu_i] * tic[0];
@@ -354,10 +382,12 @@ void FeatureManager::triangulate(int frameCnt, Vector3d Ps[], Matrix3d Rs[], Vec
             leftPose.leftCols<3>() = R0.transpose();
             leftPose.rightCols<1>() = -R0.transpose() * t0;
 
-            imu_i++;
+            int imu_i_local = fromGlobalIndex2Local(global_frame_idx, imu_i);
+            int imu_j = global_frame_idx[++imu_i_local];
+
             Eigen::Matrix<double, 3, 4> rightPose;
-            Eigen::Vector3d t1 = Ps[imu_i] + Rs[imu_i] * tic[0];
-            Eigen::Matrix3d R1 = Rs[imu_i] * ric[0];
+            Eigen::Vector3d t1 = Ps[imu_j] + Rs[imu_j] * tic[0];
+            Eigen::Matrix3d R1 = Rs[imu_j] * ric[0];
             rightPose.leftCols<3>() = R1.transpose();
             rightPose.rightCols<1>() = -R1.transpose() * t1;
 
@@ -385,6 +415,8 @@ void FeatureManager::triangulate(int frameCnt, Vector3d Ps[], Matrix3d Rs[], Vec
             continue;
 
         int imu_i = it_per_id.start_frame, imu_j = imu_i - 1;
+        int imu_i_local = fromGlobalIndex2Local(global_frame_idx, imu_i);
+        int imu_j_local = imu_i_local -1 ;
 
         Eigen::MatrixXd svd_A(2 * it_per_id.feature_per_frame.size(), 4);
         int svd_idx = 0;
@@ -397,8 +429,10 @@ void FeatureManager::triangulate(int frameCnt, Vector3d Ps[], Matrix3d Rs[], Vec
 
         for (auto &it_per_frame : it_per_id.feature_per_frame)
         {
-            imu_j++;
-
+            imu_j_local++;
+            imu_j = global_frame_idx[imu_j_local];
+            if (imu_i == imu_j)
+                continue;
             Eigen::Vector3d t1 = Ps[imu_j] + Rs[imu_j] * tic[0];
             Eigen::Matrix3d R1 = Rs[imu_j] * ric[0];
             Eigen::Vector3d t = R0.transpose() * (t1 - t0);
@@ -410,8 +444,6 @@ void FeatureManager::triangulate(int frameCnt, Vector3d Ps[], Matrix3d Rs[], Vec
             svd_A.row(svd_idx++) = f[0] * P.row(2) - f[2] * P.row(0);
             svd_A.row(svd_idx++) = f[1] * P.row(2) - f[2] * P.row(1);
 
-            if (imu_i == imu_j)
-                continue;
         }
         ROS_ASSERT(svd_idx == svd_A.rows());
         Eigen::Vector4d svd_V = Eigen::JacobiSVD<Eigen::MatrixXd>(svd_A, Eigen::ComputeThinV).matrixV().rightCols<1>();
@@ -447,7 +479,10 @@ void FeatureManager::removeOutlier(set<int> &outlierIndex)
     }
 }
 
-void FeatureManager::removeBackShiftDepth(Eigen::Matrix3d marg_R, Eigen::Vector3d marg_P, Eigen::Matrix3d new_R, Eigen::Vector3d new_P)
+//边缘化最老帧时，处理特征点保存的帧号，将起始帧是最老帧的特征点的深度值进行转移
+//marg_R、marg_P为被边缘化的位姿，new_R、new_P为在这下一帧的位姿
+//adjust the multicam
+void FeatureManager::removeBackShiftDepth(Eigen::Matrix3d marg_R, Eigen::Vector3d marg_P, Eigen::Matrix3d new_R, Eigen::Vector3d new_P, const vector<int> &updated_global_frame_idx)
 {
     for (auto it = feature.begin(), it_next = feature.begin();
          it != feature.end(); it = it_next)
@@ -455,7 +490,10 @@ void FeatureManager::removeBackShiftDepth(Eigen::Matrix3d marg_R, Eigen::Vector3
         it_next++;
 
         if (it->start_frame != 0)
+        {
             it->start_frame--;
+            it->start_frame_local--;
+        }
         else
         {
             Eigen::Vector3d uv_i = it->feature_per_frame[0].point;  
@@ -467,6 +505,8 @@ void FeatureManager::removeBackShiftDepth(Eigen::Matrix3d marg_R, Eigen::Vector3
             }
             else
             {
+                it->start_frame = updated_global_frame_idx[0];
+                it->start_frame_local = 0;
                 Eigen::Vector3d pts_i = uv_i * it->estimated_depth;
                 Eigen::Vector3d w_pts_i = marg_R * pts_i + marg_P;
                 Eigen::Vector3d pts_j = new_R.transpose() * (w_pts_i - new_P);
@@ -487,7 +527,9 @@ void FeatureManager::removeBackShiftDepth(Eigen::Matrix3d marg_R, Eigen::Vector3
     }
 }
 
-void FeatureManager::removeBack()
+//边缘化最老帧时，直接将特征点所保存的帧号向前滑动，不作深度转移
+//adjust the multicam
+void FeatureManager::removeBack(const vector<int> &updated_global_frame_idx)
 {
     for (auto it = feature.begin(), it_next = feature.begin();
          it != feature.end(); it = it_next)
@@ -495,30 +537,45 @@ void FeatureManager::removeBack()
         it_next++;
 
         if (it->start_frame != 0)
+        {
             it->start_frame--;
+            it->start_frame_local--;
+        }
         else
         {
             it->feature_per_frame.erase(it->feature_per_frame.begin());
             if (it->feature_per_frame.size() == 0)
                 feature.erase(it);
+            it->start_frame = updated_global_frame_idx[0];
+            it->start_frame_local = 0;
         }
     }
 }
-
-void FeatureManager::removeFront(int frame_count)
+//最旧帧未被边缘化的特征点滑窗操作
+void FeatureManager::removeBackNoMerge()
 {
+    for(auto it = feature.begin(); it != feature.end(); it++)
+    {
+        it->start_frame--;
+    }
+}
+//边缘化次新帧时，对特征点在次新帧的信息进行移除处理
+//adjust the multicam, merge_frame_idx_global为待边缘化帧的全局id, merge_frame_idx_local为待边缘化帧的局部id
+void FeatureManager::removeFront(int merge_frame_idx_global, int merge_frame_idx_local)
+{//注意global_frame_idx是经过slideWindowNew更新后的
     for (auto it = feature.begin(), it_next = feature.begin(); it != feature.end(); it = it_next)
     {
         it_next++;
 
-        if (it->start_frame == frame_count)
+        if (it->start_frame > merge_frame_idx_global)//起始帧大于被边缘化帧
         {
             it->start_frame--;
+            it->start_frame_local--;
         }
-        else
+        else//起始帧小于等于被边缘化帧
         {
-            int j = WINDOW_SIZE - 1 - it->start_frame;
-            if (it->endFrame() < frame_count - 1)
+            int j = merge_frame_idx_local - it->start_frame_local;//被边缘化帧到起始帧的距离
+            if (it->endFrame_local() < merge_frame_idx_local)
                 continue;
             it->feature_per_frame.erase(it->feature_per_frame.begin() + j);
             if (it->feature_per_frame.size() == 0)
@@ -526,13 +583,26 @@ void FeatureManager::removeFront(int frame_count)
         }
     }
 }
-
-double FeatureManager::compensatedParallax2(const FeaturePerId &it_per_id, int frame_count)
+//边缘化次新帧，次新帧并非来自本前端时的removeFront
+void FeatureManager::removeFrontNoMerge(int merge_frame_idx)
+{//frame_count为被边缘化帧的全局id
+    for(auto &it_per_id : feature)
+    {
+        if(it_per_id.start_frame > merge_frame_idx)
+        {
+            it_per_id.start_frame--;
+        }
+    }
+}
+//adjust the multicam
+double FeatureManager::compensatedParallax2(const FeaturePerId &it_per_id, int frame_count, const vector<int> &global_frame_idx)
 {
     //check the second last frame is keyframe or not
     //parallax betwwen seconde last frame and third last frame
-    const FeaturePerFrame &frame_i = it_per_id.feature_per_frame[frame_count - 2 - it_per_id.start_frame];
-    const FeaturePerFrame &frame_j = it_per_id.feature_per_frame[frame_count - 1 - it_per_id.start_frame];
+    int local_cur_frame = fromGlobalIndex2Local(global_frame_idx, frame_count);
+    int start_frame_local = fromGlobalIndex2Local(global_frame_idx, it_per_id.start_frame);
+    const FeaturePerFrame &frame_i = it_per_id.feature_per_frame[local_cur_frame - 2 - start_frame_local];
+    const FeaturePerFrame &frame_j = it_per_id.feature_per_frame[local_cur_frame - 1 - start_frame_local];
 
     double ans = 0;
     Vector3d p_j = frame_j.point;
