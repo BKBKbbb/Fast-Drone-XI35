@@ -472,6 +472,10 @@ sudo docker exec -it  fd_runtime bash
     <arg name="point0_y" value="-2.0" />
     <arg name="point0_z" value="0.7" />
 ...
+39L
+        <param name="search_startpoint_x" value="1.0" type="double"/>
+        <param name="search_startpoint_y" value="-2.0" type="double"/>
+        <param name="search_startpoint_z" value="0.7" type="double"/>
 ```
 
 ## 6 需要注意的问题
