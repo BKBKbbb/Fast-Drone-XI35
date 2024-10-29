@@ -442,6 +442,8 @@ sudo docker exec -it  fd_runtime bash
   - `roslaunch target_merge target_merge.launch`
 
 - 打开多机自组网通信
+    - `sudo ifconfig wlan1 multicast`
+    - `sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1`
     - `roslaunch lcm_receive lcm_receive.launch`
     - `roslaunch lcm_send lcm_send.launch`
 
