@@ -478,6 +478,8 @@ sudo docker exec -it  fd_runtime bash
         <param name="search_startpoint_z" value="0.7" type="double"/>
 ```
 
+- .bashrc ROS多机配置
+
 ## 6 需要注意的问题
 
 ### 飞控相关
