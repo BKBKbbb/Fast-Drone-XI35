@@ -441,6 +441,10 @@ sudo docker exec -it  fd_runtime bash
   - `roslaunch search_plan search_plan.launch`
   - `roslaunch target_merge target_merge.launch`
 
+- 打开多机自组网通信
+    - `roslaunch lcm_receive lcm_receive.launch`
+    - `roslaunch lcm_send lcm_send.launch`
+
 起飞：
 
 - `sh Fast-Drone-XI35/shfiles/takeoff.sh`
