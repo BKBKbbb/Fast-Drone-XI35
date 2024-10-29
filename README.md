@@ -439,7 +439,7 @@ sudo docker exec -it  fd_runtime bash
 
 - 打开多机协同搜索的状态机，以及目标结果融合
   - `roslaunch search_plan search_plan.launch`
-  - `roslaunch target_recognition target_recognition.launch`
+  - `roslaunch target_merge target_merge.launch`
 
 起飞：
 
