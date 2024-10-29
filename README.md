@@ -451,6 +451,29 @@ sudo docker exec -it  fd_runtime bash
 
 - `sh Fast-Drone-XI35/shfiles/takeoff.sh`
 
+### 机间特异性配置
+
+- src/realflight_modules/VINS-Fusion-gpu/config/fast_drone_250.yaml: 107L
+```shell
+  odometry_type: 1 #0为原始里程计，1为加了偏置后的里程计
+  drone_id: 2
+  single_offset: 2.0
+```
+- src/auto_search/target_merge/launch/target_merge.launch: 9L
+```xml
+<param name="drone_id" value="2" type="int"/>
+```
+
+- src/auto_search/search_plan/launch/search_plan.launch: 4L
+```xml
+    <arg name="point_num" value="1" />
+
+    <arg name="point0_x" value="3.5" />
+    <arg name="point0_y" value="-2.0" />
+    <arg name="point0_z" value="0.7" />
+...
+```
+
 ## 6 需要注意的问题
 
 ### 飞控相关
