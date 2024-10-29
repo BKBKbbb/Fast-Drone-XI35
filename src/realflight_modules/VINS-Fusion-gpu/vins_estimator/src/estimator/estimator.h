@@ -16,6 +16,7 @@
 #include <ceres/ceres.h>
 #include <unordered_map>
 #include <queue>
+#include <deque>
 #include <opencv2/core/eigen.hpp>
 #include <eigen3/Eigen/Dense>
 #include <eigen3/Eigen/Geometry>
@@ -54,7 +55,7 @@ class Estimator
     void processMeasurements();
     //adjust multicamera
     pair<bool, int> isFeatureBufAvailable();
-    bool isFeatureBufAvailable();
+    bool isProcessAvailable();
     int getFrontIdFromBuf();
 
     // internal
@@ -188,9 +189,9 @@ class Estimator
     bool is_valid, is_key;
     bool failure_occur;
 
-    vector<Vector3d> point_cloud;
-    vector<Vector3d> margin_cloud;
-    vector<Vector3d> key_poses;
+    vector<Vector3d, Eigen::aligned_allocator<Eigen::Vector3d>> point_cloud;
+    vector<Vector3d, Eigen::aligned_allocator<Eigen::Vector3d>> margin_cloud;
+    vector<Vector3d, Eigen::aligned_allocator<Eigen::Vector3d>> key_poses;
     double initial_timestamp;
 
 

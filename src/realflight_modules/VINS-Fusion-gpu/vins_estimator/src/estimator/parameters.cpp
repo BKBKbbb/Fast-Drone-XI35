@@ -67,6 +67,7 @@ int USABLE_THRESH_TRACKCNT;
 int INITIALIZED_THRESH;
 int RESET_THRESH;
 double PROCESS_INTERVAL_THRESH;
+int MONO_INITIAL_FRAME_COUNT;
 
 template <typename T>
 T readParam(ros::NodeHandle &n, std::string name)
@@ -266,5 +267,6 @@ void readParameters(std::string config_file)
     INITIALIZED_THRESH = fsSettings["initialized_thresh"];
     RESET_THRESH = fsSettings["reset_thresh"];
     PROCESS_INTERVAL_THRESH = fsSettings["image_process_interval_thres"];
+    MONO_INITIAL_FRAME_COUNT = fsSettings["mono_initial_frame_count"];
     fsSettings.release();
 }

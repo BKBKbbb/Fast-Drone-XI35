@@ -60,6 +60,7 @@ void Estimator::setParameter()
     ProjectionTwoFrameOneCamFactor::sqrt_info = FOCAL_LENGTH / 1.5 * Matrix2d::Identity();
     ProjectionTwoFrameTwoCamFactor::sqrt_info = FOCAL_LENGTH / 1.5 * Matrix2d::Identity();
     ProjectionOneFrameTwoCamFactor::sqrt_info = FOCAL_LENGTH / 1.5 * Matrix2d::Identity();
+    key_poses = vector<Vector3d, Eigen::aligned_allocator<Eigen::Vector3d>>(WINDOW_SIZE+1);
     td = vector<double>(FRONTEND_NUM, TD);
     lastProcessTime = vector<double>(FRONTEND_NUM, 0);
     g = G;
@@ -285,7 +286,7 @@ pair<bool, int> Estimator::isFeatureBufAvailable()
     return res;
 }
 //确认是否满足调度条件
-bool Estimator::isFeatureBufAvailable()
+bool Estimator::isProcessAvailable()
 {
     std::unique_lock<std::mutex> lck(mBuf);
     //只要有一个前端的buf达到2帧以上就满足调度条件
@@ -294,6 +295,7 @@ bool Estimator::isFeatureBufAvailable()
         if(vec.size() >= 3)
             return true;
     }
+    return false;
 }
 //根据调度规则返回将被处理的前端id，并剔除被处理帧附近的帧
 int Estimator::getFrontIdFromBuf()
@@ -301,26 +303,28 @@ int Estimator::getFrontIdFromBuf()
     double earliest_time = 0;
     std::unique_lock<std::mutex> lck(mBuf);
     //找到最早的时间戳
-    for(auto f_vec : featureBuf)
-    {
-        if(!f_vec.empty())
-        {
-            if(earliest_time == 0)
-                earliest_time = f_vec.front().first + td[i];
-            else
-                earliest_time = std::min(f_vec.front().first + td[i], earliest_time);
-        }
-    }
-    //判断待处理的前端id
-    double time_thresh = earliest_time + PROCESS_INTERVAL_THRESH;
-    double max_interval = 0;
-    std::unordered_map<double, int> interval_map;
     int idx = 0;
     for(auto f_vec : featureBuf)
     {
         if(!f_vec.empty())
         {
-            double cur_time = f_vec.front().first + td[i];
+            if(earliest_time == 0)
+                earliest_time = f_vec.front().first + td[idx];
+            else
+                earliest_time = std::min(f_vec.front().first + td[idx], earliest_time);
+        }
+        idx++;
+    }
+    //判断待处理的前端id
+    double time_thresh = earliest_time + PROCESS_INTERVAL_THRESH;
+    double max_interval = 0;
+    std::unordered_map<double, int> interval_map;
+    idx = 0;
+    for(auto f_vec : featureBuf)
+    {
+        if(!f_vec.empty())
+        {
+            double cur_time = f_vec.front().first + td[idx];
             if(cur_time < time_thresh)
             {//该帧在处理间隔阈值内
                 double process_interval = cur_time - lastProcessTime[idx];
@@ -344,25 +348,27 @@ void Estimator::processMeasurements()
     while (1)//500hz
     {
         //printf("process measurments\n");
-        TicToc t_process;
-        pair<double, map<int, vector<pair<int, Eigen::Matrix<double, 7, 1> > > > > feature;
-        vector<pair<int, map<int, vector<pair<int, Eigen::Matrix<double, 7, 1> > > > > > multiFeatures;//同步帧容器
-        vector<pair<double, Eigen::Vector3d>> accVector, gyrVector;
-        vector<int> syncFeatureIdx;//同步帧id
-        pair<bool, int> checkResult = isFeatureBufAvailable();//找到基础帧
-        if(checkResult.first)
+        if(isProcessAvailable())
         {
-            int baseIdx = checkResult.second;
+            TicToc t_process;
+            pair<double, map<int, vector<pair<int, Eigen::Matrix<double, 7, 1> > > > > feature;
+            vector<pair<int, map<int, vector<pair<int, Eigen::Matrix<double, 7, 1> > > > > > multiFeatures;//同步帧容器
+            vector<pair<double, Eigen::Vector3d>> accVector, gyrVector;
+            vector<int> syncFeatureIdx;//同步帧id
+            int baseIdx = getFrontIdFromBuf();//待处理前端id
             ROS_DEBUG("Current baseIdx is %d", baseIdx);
             syncFeatureIdx.push_back(baseIdx);
-            feature = featureBuf[baseIdx].front();
+            mBuf.lock();
+            feature = std::move(featureBuf[baseIdx].front());
+            featureBuf[baseIdx].pop();
+            mBuf.unlock();
             multiFeatures.emplace_back(baseIdx, feature.second);
+
             double baseTime = feature.first;
-            curTime = feature.first + td[baseIdx];
+            curTime = baseTime + td[baseIdx];
             if(curTime < prevTime)
             {//当前处理的帧时间戳小于上一时刻的，重置
                 ROS_ERROR("processMeasurements fatal error: curTime %lf is less than preTime %lf! will throw current frame[frontId-%d]!", curTime, prevTime, baseIdx);
-                featureBuf[baseIdx].pop();
                 continue;
             }
             while(1)
@@ -382,25 +388,6 @@ void Estimator::processMeasurements()
             mBuf.lock();
             if(USE_IMU)
                 getIMUInterval(prevTime, curTime, accVector, gyrVector);
-            double lastImuTime = accVector.back().first;//基础帧后一帧imu时间戳
-            //找到所有时间戳在最后一帧imu之前的feature
-            for(int i = 0; i < FRONTEND_NUM; i++)
-            {
-                if(i != baseIdx && !featureBuf[i].empty())
-                {
-                    double firstTime = featureBuf[i].front().first;
-                    if(firstTime <= lastImuTime)
-                        syncFeatureIdx.push_back(i);
-                }
-            }
-            //形成同步帧multiFeatures
-            for(int i = 1; i < syncFeatureIdx.size(); i++)
-            {//第0个是baseIdx
-                feature = featureBuf[syncFeatureIdx[i]].front();
-                multiFeatures.emplace_back(syncFeatureIdx[i], feature.second);
-                featureBuf[syncFeatureIdx[i]].pop();
-            }
-            featureBuf[baseIdx].pop();
             mBuf.unlock();
 
             if(USE_IMU)
@@ -422,7 +409,7 @@ void Estimator::processMeasurements()
             ROS_INFO("Process image:%d, the timestamp is %lf", baseIdx, curTime);
             processImage(multiFeatures, baseTime);
             prevTime = curTime;
-
+            lastProcessTime[baseIdx] = curTime;
             printStatistics(*this, 0);
 
             std_msgs::Header header;
@@ -433,7 +420,7 @@ void Estimator::processMeasurements()
             pubKeyPoses(*this, header);
             pubCameraPose(baseIdx, *this, header);
             pubPointCloud(baseIdx, *this, header);
-            pubKeyframe(baseIdx, *this);
+            //pubKeyframe(baseIdx, *this);
             pubTF(*this, header);
             printf("process measurement time: %f\n", t_process.toc());
         }
@@ -578,7 +565,7 @@ vector<int> Estimator::getGoodFrontId()
                     ROS_WARN("Front_%d's long-tracking feature %d is less than threshold %d, Reset it to unusable!", i, featureCounts, RESET_THRESH);
                 }
                 else
-                    res.push_back(i);
+                    res.push_back(i);   
             }
         }
         else
@@ -587,7 +574,7 @@ vector<int> Estimator::getGoodFrontId()
             {
                 if(!frontStateVec[i].initialized)
                 {//未完成初始化
-                    if(f_manager[i].getFeatureCount() >= usable2InitializedThresh)
+                    if(f_manager[i].getMonoFeatureInitialCount() >= usable2InitializedThresh)
                     {
                         frontStateVec[i].initialized = true;
                         ROS_INFO("Front-%d initialized successfully!", i);
@@ -775,7 +762,7 @@ void Estimator::processImage(const vector<pair<int, map<int, vector<pair<int, Ei
         optimization(goodFrontID);
         //剔除外点
         set<int> removeIndex;
-        for(int front_id = 0; front_id < FRONTEND_NUM; front_id++)
+        for(auto front_id : goodFrontID)
         {
             outliersRejection(front_id, removeIndex);
             f_manager[front_id].removeOutlier(removeIndex);
@@ -807,9 +794,9 @@ void Estimator::processImage(const vector<pair<int, map<int, vector<pair<int, Ei
             f_manager[front_id].removeFailures();
         ROS_INFO("removeFailures successfully!");
         // prepare output of VINS
-        key_poses.clear();
-        for (int i = 0; i <= WINDOW_SIZE; i++)
-            key_poses.push_back(Ps[i]);
+        //key_poses.clear();
+        // for (int i = 0; i <= WINDOW_SIZE; i++)
+        //     key_poses[i] = Ps[i];
 
         last_R = Rs[WINDOW_SIZE];
         last_P = Ps[WINDOW_SIZE];
@@ -1672,11 +1659,11 @@ void Estimator::slideWindow()
                     all_image_frame.erase(all_image_frame.begin(), it_0);
                 }
             }
-            vector<int> mergeFronteId_vec = multiCamIdxSlideOld();
+            vector<int> mergeFronteId_vec = multiCamIdxSlideOld();//更新索引矩阵
             set<int> mergeFronteId_set;
             for(auto id : mergeFronteId_vec)
                 mergeFronteId_set.insert(id);
-            slideWindowOld(mergeFronteId_set);
+            slideWindowOld(mergeFronteId_set);//更新特征点
         }
     }
     else
@@ -1728,11 +1715,11 @@ void Estimator::slideWindow()
                 linear_acceleration_buf[WINDOW_SIZE].clear();
                 angular_velocity_buf[WINDOW_SIZE].clear();
             }
-            auto pair_res = multiCamIdxSlideNew(mergeNewFrameIdx);
+            auto pair_res = multiCamIdxSlideNew(mergeNewFrameIdx);//更新索引矩阵
             set<int> mergeFronteId_set;
             for(auto id : pair_res.first)
                 mergeFronteId_set.insert(id);
-            slideWindowNew(mergeFronteId_set, pair_res.second);
+            slideWindowNew(mergeFronteId_set, pair_res.second);//更新特征点
         }
     }
 }
@@ -1929,7 +1916,7 @@ double Estimator::reprojectionError(Matrix3d &Ri, Vector3d &Pi, Matrix3d &rici, 
     double ry = residual.y();
     return sqrt(rx * rx + ry * ry);
 }
-//剔除重头因误差大的特征点
+//剔除重投影误差大的特征点
 void Estimator::outliersRejection(int frontId, set<int> &removeIndex)
 {
     //return;
@@ -2000,11 +1987,11 @@ void Estimator::fastPredictIMU(double t, Eigen::Vector3d linear_acceleration, Ei
     latest_time = t;
     Eigen::Vector3d un_acc_0 = latest_Q * (latest_acc_0 - latest_Ba) - g;
     Eigen::Vector3d un_gyr = 0.5 * (latest_gyr_0 + angular_velocity) - latest_Bg;
-    latest_Q = latest_Q * Utility::deltaQ(un_gyr * dt);
+    latest_Q = latest_Q * Utility::deltaQ(un_gyr * dt);//R  
     Eigen::Vector3d un_acc_1 = latest_Q * (linear_acceleration - latest_Ba) - g;
     Eigen::Vector3d un_acc = 0.5 * (un_acc_0 + un_acc_1);
-    latest_P = latest_P + dt * latest_V + 0.5 * dt * dt * un_acc;
-    latest_V = latest_V + dt * un_acc;
+    latest_P = latest_P + dt * latest_V + 0.5 * dt * dt * un_acc;//P
+    latest_V = latest_V + dt * un_acc;//V
     latest_acc_0 = linear_acceleration;
     latest_gyr_0 = angular_velocity;
 }

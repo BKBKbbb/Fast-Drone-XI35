@@ -127,7 +127,8 @@ stereo_num: 1
 mono_num: 1
 usable_thresh_feature_cnt: 30
 usable_thresh_track_cnt: 3
-initialized_thresh: 100
+initialized_thresh: 80
 reset_thresh: 5 #20
+mono_initial_frame_count: 4
 
 image_process_interval_thres: 0.02

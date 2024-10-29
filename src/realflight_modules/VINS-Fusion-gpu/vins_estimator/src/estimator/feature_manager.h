@@ -93,6 +93,7 @@ class FeatureManager
     void setRic(Matrix3d _ric[]);
     void clearState();
     int getFeatureCount();
+    int getMonoFeatureInitialCount();
     int fromGlobalIndex2Local(const vector<int> &local_window, int global_index);
     bool addFeatureCheckParallax(int frame_count, const map<int, vector<pair<int, Eigen::Matrix<double, 7, 1>>>> &image, double td, const vector<int> &global_frame_idx);
     vector<pair<Vector3d, Vector3d>> getCorresponding(int frame_count_l, int frame_count_r);

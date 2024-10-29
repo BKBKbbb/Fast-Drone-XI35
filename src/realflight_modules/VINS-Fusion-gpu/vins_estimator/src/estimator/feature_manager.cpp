@@ -59,6 +59,21 @@ int FeatureManager::getFeatureCount()
     }
     return cnt;
 }
+//单目初始化成功前，统计被n帧以上观测到的特征点
+int FeatureManager::getMonoFeatureInitialCount()
+{
+    int cnt = 0;
+    for (auto &it : feature)
+    {
+        it.used_num = it.feature_per_frame.size();
+        if (it.used_num >= MONO_INITIAL_FRAME_COUNT)
+        {
+            cnt++;
+        }
+    }
+    return cnt;
+}
+
 //将全局滑窗索引转换为局部窗口索引
 int FeatureManager::fromGlobalIndex2Local(const vector<int> &local_window, int global_index)
 {

@@ -22,7 +22,7 @@ using namespace std;
 
 const double FOCAL_LENGTH = 460.0;
 const int WINDOW_SIZE = 25;//
-const int NUM_OF_F = 2500;
+const int NUM_OF_F = 3000;
 //#define UNIT_SPHERE_ERROR
 
 extern double INIT_DEPTH;
@@ -84,6 +84,7 @@ extern int USABLE_THRESH_TRACKCNT;
 extern int INITIALIZED_THRESH;
 extern int RESET_THRESH;
 extern double PROCESS_INTERVAL_THRESH;
+extern int MONO_INITIAL_FRAME_COUNT;
 
 void readParameters(std::string config_file);
 
