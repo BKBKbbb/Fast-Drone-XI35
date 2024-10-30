@@ -480,6 +480,14 @@ sudo docker exec -it  fd_runtime bash
 
 - .bashrc ROS多机配置
 
+### 与飞行场地大小相关的参数配置
+
+- search_plan 里的到达半径/阈值
+- ego_planner 里的
+    - thresh_no_replan
+    - 规划最大速度
+- px4ctrl 里的飞行最大速度
+
 ## 6 需要注意的问题
 
 ### 飞控相关
