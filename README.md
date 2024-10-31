@@ -399,10 +399,16 @@ sudo docker load -i fastdronexi35_base.tar
 ```shell
 make jetson
 ```
-- 执行容器启动脚本
+- 首次编译完成后，执行容器启动脚本
 ```shell
 ./container_run.sh
 ```
+
+后续重启后，只需执行以下命令启动容器
+```shell
+sudo docker start fd_runtime
+```
+
 - 进入容器的 bash
 
 ```shell
