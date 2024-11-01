@@ -1,0 +1,71 @@
+path_prefix: /home/orin01/Fast-Drone-XI35/
+
+paths:
+  src/auto_search/target_merge/launch/target_merge.launch:
+    - 
+      <param name="drone_id" value="\d+" type="int"/>: <param name="drone_id" value="1" type="int"/>
+
+  src/auto_search/search_plan/launch/search_plan.launch:
+    - 
+      <param name="arrive_threshold" value="\d+.\d+" type="double"/>: <param name="arrive_threshold" value="0.6" type="double"/>
+
+      <param name="search_startpoint_x" value="-*\d+.\d+" type="double"/>: <param name="search_startpoint_x" value="1.0" type="double"/>
+      <param name="search_startpoint_y" value="-*\d+.\d+" type="double"/>: <param name="search_startpoint_y" value="-2.0" type="double"/>
+      <param name="search_startpoint_z" value="-*\d+.\d+" type="double"/>: <param name="search_startpoint_z" value="5.0" type="double"/>
+
+      # <arg name="point_num" value="\d+" />: <arg name="point_num" value="2" />
+      # <arg name="point0_x" value="-*\d+.\d+" />: <arg name="point0_x" value="8.5" />
+      # <arg name="point0_y" value="-*\d+.\d+" />: <arg name="point0_y" value="-2.0" />
+      # <arg name="point0_z" value="-*\d+.\d+" />: <arg name="point0_z" value="5.0" />
+      # <arg name="point1_x" value="-*\d+.\d+" />: <arg name="point1_x" value="1.0" />
+      # <arg name="point1_y" value="-*\d+.\d+" />: <arg name="point1_y" value="-2.0" />
+      # <arg name="point1_z" value="-*\d+.\d+" />: <arg name="point1_z" value="5.0" />
+      # <arg name="point2_x" value="-*\d+.\d+" />: <arg name="point2_x" value="0.0" />
+      # <arg name="point2_y" value="-*\d+.\d+" />: <arg name="point2_y" value="1.5" />
+      # <arg name="point2_z" value="-*\d+.\d+" />: <arg name="point2_z" value="0.7" />
+      # <arg name="point3_x" value="-*\d+.\d+" />: <arg name="point3_x" value="0.0" />
+      # <arg name="point3_y" value="-*\d+.\d+" />: <arg name="point3_y" value="0.0" />
+      # <arg name="point3_z" value="-*\d+.\d+" />: <arg name="point3_z" value="0.7" />
+      # <arg name="point4_x" value="-*\d+.\d+" />: <arg name="point4_x" value="4.2" />
+      # <arg name="point4_y" value="-*\d+.\d+" />: <arg name="point4_y" value="-2.2" />
+      # <arg name="point4_z" value="-*\d+.\d+" />: <arg name="point4_z" value="1.0" />
+
+  src/realflight_modules/px4ctrl/config/ctrl_param_fpv.yaml:
+    - 
+      "takeoff_height: \\d+.\\d+": "takeoff_height: 5.0"
+      "takeoff_land_speed: \\d+.\\d+": "takeoff_land_speed: 0.5"
+
+  src/planner/plan_manage/launch/advanced_param_exp.xml:
+    - 
+      "<param name=\"grid_map/resolution\"      value=\"\\d+.\\d+\" />": "<param name=\"grid_map/resolution\"      value=\"1.0\" />"
+
+  src/planner/plan_manage/launch/single_run_in_exp.launch:
+    -
+      <arg name="map_size_x" value="\d+"/>: <arg name="map_size_x" value="50"/>
+      <arg name="map_size_y" value="\d+"/>: <arg name="map_size_y" value="50"/>
+      <arg name="map_size_z" value="\d+.\d+"/>: <arg name="map_size_z" value="9.0"/>
+
+      "<arg name=\"max_vel\" value=\"\\d+.\\d+\" />": "<arg name=\"max_vel\" value=\"1.0\" />"
+      "<arg name=\"max_acc\" value=\"\\d+.\\d+\" />": "<arg name=\"max_acc\" value=\"3.0\" />"
+
+      # <arg name="point_num" value="4" />: <arg name="point_num" value="\d+" />
+      # <arg name="point0_x" value="-*\d+.\d+" />: <arg name="point0_x" value="4.0" />
+      # <arg name="point0_y" value="-*\d+.\d+" />: <arg name="point0_y" value="0.0" />
+      # <arg name="point0_z" value="-*\d+.\d+" />: <arg name="point0_z" value="0.7" />
+      # <arg name="point1_x" value="-*\d+.\d+" />: <arg name="point1_x" value="0.0" />
+      # <arg name="point1_y" value="-*\d+.\d+" />: <arg name="point1_y" value="0.0" />
+      # <arg name="point1_z" value="-*\d+.\d+" />: <arg name="point1_z" value="0.7" />
+      # <arg name="point2_x" value="-*\d+.\d+" />: <arg name="point2_x" value="4.0" />
+      # <arg name="point2_y" value="-*\d+.\d+" />: <arg name="point2_y" value="0.0" />
+      # <arg name="point2_z" value="-*\d+.\d+" />: <arg name="point2_z" value="0.7" />
+      # <arg name="point3_x" value="-*\d+.\d+" />: <arg name="point3_x" value="0.0" />
+      # <arg name="point3_y" value="-*\d+.\d+" />: <arg name="point3_y" value="0.0" />
+      # <arg name="point3_z" value="-*\d+.\d+" />: <arg name="point3_z" value="0.7" />
+
+  src/realflight_modules/VINS-Fusion-gpu/config/fast_drone_250.yaml:
+    -
+      "odometry_type: \\d+": "odometry_type: 1"
+      "drone_id: \\d+": "drone_id: 2"
+      "single_offset: -*\\d+.\\d+": "single_offset: 2.0"
+
+      "show_track: \\d+": "show_track: 1"
