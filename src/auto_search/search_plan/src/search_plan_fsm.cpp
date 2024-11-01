@@ -60,8 +60,12 @@ void Search_Plan_FSM::execSearchStage()
         current_Target = wps_[wp_id_];
       }
     }
-    else
+    else {  // Don't find any number, stop and land.
       current_Target = wps_[wp_id_];
+      if (haveArrivedTarget()) {
+        changeMainState(LAND_STAGE, "execSearchStage()");
+      }
+    }
 
     break;
   }
