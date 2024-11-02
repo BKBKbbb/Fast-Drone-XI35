@@ -61,6 +61,7 @@ namespace auto_search
 		// ros
 		ros::Publisher pub_Target;
 		ros::Publisher pub_Land;
+		ros::Publisher pub_CallHover;
 
 		ros::Subscriber sub_Odom;
 		ros::Subscriber sub_Trigger;

@@ -64,6 +64,7 @@ void Search_Plan_FSM::execSearchStage()
       current_Target = wps_[wp_id_];
       if (haveArrivedTarget()) {
         changeMainState(LAND_STAGE, "execSearchStage()");
+        changeLandSubState(TAKE_LAND, "execLandStage()");
       }
     }
 
@@ -84,7 +85,7 @@ void Search_Plan_FSM::execSearchStage()
       if (continously_called_times_ == 1) {
         // slow_down_trig_pos = current_Position + current_R_b2w_ * slowdown_forward_vector_;  // longer's slowdown stratege
         slow_down_trig_pos = current_Position;
-        slow_down_trig_pos.z() = slow_down_height_;
+        // slow_down_trig_pos.z() = slow_down_height_;
       }
     }
     else {
@@ -104,6 +105,11 @@ void Search_Plan_FSM::execSearchStage()
       else if ((now_time - start_time).toSec() > slow_down_time_duration_) {
         start_the_clock = true;
         has_slow_down_req_ = false;
+
+        // make px4ctrl back to CMD mode from AUTO_HOVER mode
+        std_msgs::Bool msg;
+        msg.data = false;
+        pub_CallHover.publish(msg);
 
         changeSearchSubState(SEARCH_NUMS, "execSearchStage()");
 
@@ -610,6 +616,7 @@ void Search_Plan_FSM::init(ros::NodeHandle& nh)
   // pub
   pub_Target = nh.advertise<geometry_msgs::PoseStamped>("/search_plan/pos_cmd", 50);
   pub_Land = nh.advertise<quadrotor_msgs::TakeoffLand>("/px4ctrl/takeoff_land", 5, true);
+  pub_CallHover = nh.advertise<std_msgs::Bool>("/target_merge/search_hover", 1);
 
   // srv
   srv_slowdown = nh.advertiseService("/search_plan/slowdown_for_reg", &Search_Plan_FSM::slowDownServiceCallBack, this);

@@ -63,6 +63,8 @@ namespace ego_planner
     //紧急进入Hover
     Emergency_Hover = nh.advertise<std_msgs::Bool>("/planning/Emergency_hover", 1);
 
+    takeoff_land_sub = nh.subscribe("/px4ctrl/takeoff_land", 1, &EGOReplanFSM::takeoffLandCallback, this);
+
     if (target_type_ == TARGET_TYPE::MANUAL_TARGET)
     {
       waypoint_sub_ = nh.subscribe("/move_base_simple/goal", 1, &EGOReplanFSM::waypointCallback, this);
@@ -214,6 +216,16 @@ namespace ego_planner
     }
   }
 
+  void EGOReplanFSM::takeoffLandCallback(const quadrotor_msgs::TakeoffLandConstPtr &msg)
+  {
+    if (msg->takeoff_land_cmd == quadrotor_msgs::TakeoffLand::LAND) {
+      have_trigger_ = false;
+      have_target_ = false;
+      changeFSMExecState(WAIT_TARGET, "Search_Plan_Land");
+    }
+  }
+
+
   void EGOReplanFSM::triggerCallback(const geometry_msgs::PoseStampedPtr &msg)
   {
     have_trigger_ = true;
@@ -254,8 +266,8 @@ namespace ego_planner
     if(msg->data == true)
     {
       std::unique_lock<std::mutex> lck(state_mtx);
-      have_trigger_ == false;
-      have_target_ == false;
+      have_trigger_ = false;
+      have_target_ = false;
       changeFSMExecState(WAIT_TARGET, "Search_Hover");
     }
   }

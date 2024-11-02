@@ -22,6 +22,7 @@
 #include <plan_manage/planner_manager.h>
 #include <traj_utils/planning_visualization.h>
 #include <wall_follower/wall_follower.h>
+#include <quadrotor_msgs/TakeoffLand.h>
 
 using std::vector;
 
@@ -87,7 +88,7 @@ namespace ego_planner
     /* ROS utils */
     ros::NodeHandle node_;
     ros::Timer exec_timer_, safety_timer_;
-    ros::Subscriber waypoint_sub_, odom_sub_, swarm_trajs_sub_, broadcast_bspline_sub_, trigger_sub_, search_plan_sub, search_hover_sub;
+    ros::Subscriber waypoint_sub_, odom_sub_, swarm_trajs_sub_, broadcast_bspline_sub_, trigger_sub_, search_plan_sub, search_hover_sub, takeoff_land_sub;
     ros::Publisher replan_pub_, new_pub_, bspline_pub_, data_disp_pub_, swarm_trajs_pub_, broadcast_bspline_pub_;
     ros::Publisher Emergency_Hover;
 
@@ -117,6 +118,7 @@ namespace ego_planner
     void BroadcastBsplineCallback(const traj_utils::BsplinePtr &msg);
     void searchPlanCallback(const geometry_msgs::PoseStampedPtr &msg);
     void searchHoverCallback(const std_msgs::BoolConstPtr &msg);
+    void takeoffLandCallback(const quadrotor_msgs::TakeoffLandConstPtr &msg);
 
     bool checkCollision();
     void publishSwarmTrajs(bool startup_pub);
