@@ -1,26 +1,35 @@
+# 工程顶层目录所在路径
 path_prefix: /home/orin01/Fast-Drone-XI35/
 
 paths:
   src/auto_search/target_merge/launch/target_merge.launch:
     - 
+      # 组别 id
       <param name="drone_id" value="\d+" type="int"/>: <param name="drone_id" value="1" type="int"/>
 
   src/realflight_modules/VINS-Fusion-gpu/config/fast_drone_250.yaml:
     -
+      # 里程计类型，0 不加偏置，1 加偏置（统一集群的世界坐标系）
       "odometry_type: \\d+": "odometry_type: 1"
+      # 无人机个体 id
       "drone_id: \\d+": "drone_id: 2"
+      # 偏置/坐标变换的数值
       "single_offset: -*\\d+.\\d+": "single_offset: 2.0"
 
+      # 显示特征点追踪
       "show_track: \\d+": "show_track: 1"
 
   src/auto_search/search_plan/launch/search_plan.launch:
     - 
+      # search plan 判断是否到达给定点的阈值半径
       <param name="arrive_threshold" value="\d+.\d+" type="double"/>: <param name="arrive_threshold" value="0.6" type="double"/>
 
+      # 无人机由起降区飞往拒止区的第一个点，即起始点
       <param name="search_startpoint_x" value="-*\d+.\d+" type="double"/>: <param name="search_startpoint_x" value="1.0" type="double"/>
       <param name="search_startpoint_y" value="-*\d+.\d+" type="double"/>: <param name="search_startpoint_y" value="-2.0" type="double"/>
       <param name="search_startpoint_z" value="-*\d+.\d+" type="double"/>: <param name="search_startpoint_z" value="5.0" type="double"/>
 
+      # 搜索策略给定的路标点，每一架各不相同
       # <arg name="point_num" value="\d+" />: <arg name="point_num" value="2" />
 
       # <arg name="point0_x" value="-*\d+.\d+" />: <arg name="point0_x" value="8.5" />
@@ -45,22 +54,28 @@ paths:
 
   src/realflight_modules/px4ctrl/config/ctrl_param_fpv.yaml:
     - 
+      # 起飞高度
       "takeoff_height: \\d+.\\d+": "takeoff_height: 5.0"
+      # 起飞上升速度
       "takeoff_land_speed: \\d+.\\d+": "takeoff_land_speed: 0.5"
 
   src/planner/plan_manage/launch/advanced_param_exp.xml:
     - 
+      # ego planner 栅格地图的分辨率，单位[m]
       "<param name=\"grid_map/resolution\"      value=\"\\d+.\\d+\" />": "<param name=\"grid_map/resolution\"      value=\"1.0\" />"
 
   src/planner/plan_manage/launch/single_run_in_exp.launch:
     -
+      # ego planner 栅格地图的大小，单位[m]
       <arg name="map_size_x" value="\d+"/>: <arg name="map_size_x" value="50"/>
       <arg name="map_size_y" value="\d+"/>: <arg name="map_size_y" value="50"/>
       <arg name="map_size_z" value="\d+.\d+"/>: <arg name="map_size_z" value="9.0"/>
 
+      # ego planner 规划的最大速度和加速度
       "<arg name=\"max_vel\" value=\"\\d+.\\d+\" />": "<arg name=\"max_vel\" value=\"1.0\" />"
       "<arg name=\"max_acc\" value=\"\\d+.\\d+\" />": "<arg name=\"max_acc\" value=\"3.0\" />"
 
+      # 提供给 ego planner 的路标点
       # <arg name="point_num" value="4" />: <arg name="point_num" value="\d+" />
 
       # <arg name="point0_x" value="-*\d+.\d+" />: <arg name="point0_x" value="4.0" />
