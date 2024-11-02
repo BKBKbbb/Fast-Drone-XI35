@@ -38,6 +38,7 @@ public:
 		double K3;
 		bool accurate_thrust_model;
 		double hover_percentage;
+		double imu_acc_lpf_freq_cutoff;
 	};
 
 	struct RCReverse

@@ -8,6 +8,8 @@ PX4CtrlFSM::PX4CtrlFSM(Parameter_t &param_, LinearControl &controller_) : param(
 {
 	state = MANUAL_CTRL;
 	hover_pose.setZero();
+	imu_acc_lpf.setZero();
+	flag_init_imu_acc_lpf = false;
 }
 
 /* 
@@ -154,7 +156,7 @@ void PX4CtrlFSM::process()
 
 			ROS_WARN("[px4ctrl] AUTO_HOVER(L2) --> MANUAL_CTRL(L1)");
 		}
-		else if (rc_data.is_command_mode && cmd_is_received(now_time) && !emergency_hover)
+		else if (rc_data.is_command_mode && cmd_is_received(now_time) && !emergency_hover && !search_hover)
 		{
 			if (state_data.current_state.mode == "OFFBOARD")
 			{
@@ -200,7 +202,7 @@ void PX4CtrlFSM::process()
 
 			ROS_WARN("[px4ctrl] From CMD_CTRL(L3) to MANUAL_CTRL(L1)!");
 		}
-		else if (!rc_data.is_command_mode || !cmd_is_received(now_time) || emergency_hover)
+		else if (!rc_data.is_command_mode || !cmd_is_received(now_time) || emergency_hover || search_hover)
 		{
 			state = AUTO_HOVER;
 			set_hov_with_odom();
@@ -208,6 +210,8 @@ void PX4CtrlFSM::process()
 			ROS_INFO("[px4ctrl] From CMD_CTRL(L3) to AUTO_HOVER(L2)!");
 			if(emergency_hover)
 				ROS_WARN("Switch to AUTO_HOVER due to Emergency!");
+			if(search_hover)
+				ROS_WARN("Switch from CMD to Hover due to search_hover");
 		}
 		else
 		{
@@ -303,11 +307,26 @@ void PX4CtrlFSM::process()
 		break;
 	}
 
+	// STEP1.5: low pass filter for imu acc data
+	if (state == AUTO_TAKEOFF || state == AUTO_HOVER || state == CMD_CTRL) {
+		LPF_imu_a(imu_data.a);
+	}
+
 	// STEP2: estimate thrust model
+	if (state == AUTO_TAKEOFF) {
+		ros::Time now = ros::Time::now();
+		double delta_t = (now - takeoff_land.toggle_takeoff_land_time).toSec() 
+							- AutoTakeoffLand_t::MOTORS_SPEEDUP_TIME;
+		if (delta_t > 0.2)
+			controller.estimateThrustModel(imu_acc_lpf, param);
+	}
+
 	if (state == AUTO_HOVER || state == CMD_CTRL)
 	{
 		// controller.estimateThrustModel(imu_data.a, bat_data.volt, param);
-		controller.estimateThrustModel(imu_data.a,param);
+		// controller.estimateThrustModel(imu_data.a, param);
+		// controller.estimateThrustModelUsingVelFB(odom_data.v, param);
+		controller.estimateThrustModel(imu_acc_lpf, param);
 
 	}
 
@@ -456,7 +475,13 @@ Desired_State_t PX4CtrlFSM::get_takeoff_land_des(const double speed)
 	Desired_State_t des;
 	des.p = takeoff_land.start_pose.head<3>() + Eigen::Vector3d(0, 0, speed * delta_t);
 	des.v = Eigen::Vector3d(0, 0, speed);
-	des.a = Eigen::Vector3d::Zero();
+	if (speed > 0) {
+		double des_a_z = (delta_t < AutoTakeoffLand_t::TAKEOFF_SPEEDUP_TIME) ? (0.02 * 9.81 * sin(M_PI/AutoTakeoffLand_t::TAKEOFF_SPEEDUP_TIME * delta_t)) : 0;
+		des.a = Eigen::Vector3d(0, 0, des_a_z);
+	}
+	else {
+		des.a = Eigen::Vector3d::Zero();
+	}
 	des.j = Eigen::Vector3d::Zero();
 	des.yaw = takeoff_land.start_pose(3);
 	des.yaw_rate = 0.0;
@@ -655,4 +680,25 @@ void PX4CtrlFSM::reboot_FCU()
 
 	// if (param.print_dbg)
 	// 	printf("reboot result=%d(uint8_t), success=%d(uint8_t)\n", reboot_srv.response.result, reboot_srv.response.success);
+}
+
+
+void PX4CtrlFSM::LPF_imu_a(Eigen::Vector3d &imu_data_acc)
+{
+	if (flag_init_imu_acc_lpf == false) {
+		// LPF：
+		// b = 2 * PI * fc * dt, dt = 1 / fs
+		// a = b / (1 + b)
+		// y[n] = a * x[n] + (1-a) * y[n-1]
+
+		b_lpf = 2 * 3.1415926 * param.thr_map.imu_acc_lpf_freq_cutoff / param.ctrl_freq_max;
+		a_lpf = b_lpf / (1 + b_lpf);
+		printf("%6.3f,%6.3f\n", param.thr_map.imu_acc_lpf_freq_cutoff, a_lpf);	
+
+		imu_acc_lpf = imu_data_acc;
+		flag_init_imu_acc_lpf = true;
+	}
+	imu_acc_lpf = a_lpf * imu_data_acc + (1 - a_lpf) * imu_acc_lpf;
+	// printf("%6.3f,%6.3f\n", imu_acc_lpf(2), imu_data_acc(2));
+	// fflush(stdout);
 }

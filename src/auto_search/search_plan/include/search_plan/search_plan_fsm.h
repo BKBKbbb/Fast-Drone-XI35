@@ -13,6 +13,7 @@
 #include <geometry_msgs/PoseStamped.h>
 #include <nav_msgs/Odometry.h>
 #include <quadrotor_msgs/TakeoffLand.h>
+#include <std_msgs/Bool.h>
 
 #include <search_plan/SearchService.h>
 
@@ -64,6 +65,7 @@ namespace auto_search
 		ros::Subscriber sub_Odom;
 		ros::Subscriber sub_Trigger;
 		ros::Subscriber sub_target_merged;
+		ros::Subscriber sub_SearchHover;
 
 		ros::ServiceServer srv_slowdown;
 
@@ -73,12 +75,19 @@ namespace auto_search
 		// param
 		std::string odom_Topic;
 		double exec_Frequency, arrive_Threshold;
+		int search_hover_type = 0;
 		// main var
 		bool have_trigger  = false;
 		Eigen::Vector3d current_Target;
 		Eigen::Vector3d last_Target;
 		Eigen::Vector3d current_Position;
 		Eigen::Vector3d search_StartPoint;
+
+		// longer's slowdown stratege
+		// Eigen::Matrix3d current_R_b2w_;
+
+		// double slowdown_forward_dist_;
+		// Eigen::Vector3d slowdown_forward_vector_;
 
 		// search strategy waypoints
 		double waypoints_[50][3];
@@ -106,6 +115,7 @@ namespace auto_search
 		void targetToSearchCallBack(const geometry_msgs::PoseStampedPtr &msg);
 		bool slowDownServiceCallBack(search_plan::SearchService::Request  &req,
                              		 search_plan::SearchService::Response &res);
+		void slowDownCallback(const std_msgs::BoolConstPtr &msg);
 		// function
 		void publishTarget();		// 发布飞行目标点,只有目标点跟上次不一样时才发布
 		void publishLand();
