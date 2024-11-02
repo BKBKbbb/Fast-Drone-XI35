@@ -7,6 +7,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <lcm_send/TargetMerged_Message.h>
+#include <iostream>
+#include <sstream>
 
 std::string message_log_path;
 
@@ -43,16 +45,41 @@ bool save_to_file(int64_t timestamp, int drone_id) {
         return false;
     }
 
-    std::ofstream file;
-    file.open(message_log_path.c_str(), std::ios::app);
-    if (file.is_open()) {
-        file << timestamp << " " << drone_id << "\n";
-        file.close();
-    } else {
-        close(fd);
-        unlock_file(fd);
-        return false;
+    std::ifstream infile(message_log_path);
+    std::string line;
+    std::vector<std::string> lines;
+
+    while (std::getline(infile, line)) {
+        lines.push_back(line);
     }
+    infile.close();
+
+    if (lines.size() > 1000) {
+        lines.erase(lines.begin(), lines.begin() + 500);
+        std::ofstream file(message_log_path, std::ios::trunc);
+        if (file.is_open()) {
+            for (const auto& remaining_line : lines) {
+                file << remaining_line << "\n";
+            }
+            file << timestamp << " " << drone_id << "\n";
+            file.close();
+        } else {
+            close(fd);
+            unlock_file(fd);
+            return false;
+        }
+    } else { 
+        std::ofstream file(message_log_path, std::ios::app);
+        if (file.is_open()) {
+            file << timestamp << " " << drone_id << "\n";
+            file.close();
+        } else {
+            close(fd);
+            unlock_file(fd);
+            return false;
+        }
+    }
+
     unlock_file(fd);
     close(fd);
     return true;
