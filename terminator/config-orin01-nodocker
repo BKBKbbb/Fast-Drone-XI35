@@ -2240,353 +2240,353 @@
     cursor_color = "#aaaaaa"
   [[1_01]]
     cursor_color = "#aaaaaa"
-    custom_command = ssh -t orin01@10.10.10.11 'source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash; echo 'sh ~/Fast-Drone-XI35/shfiles/rspx4.sh';read;sh ~/Fast-Drone-XI35/shfiles/rspx4.sh;bash';bash
+    custom_command = ssh -t orin01@10.10.10.11 'export ROS_MASTER_URI=http://10.10.10.11:11311;export ROS_HOSTNAME=10.10.10.11;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash; echo 'sh ~/Fast-Drone-XI35/shfiles/rspx4.sh';read;sh ~/Fast-Drone-XI35/shfiles/rspx4.sh;bash';bash
     use_custom_command = True
   [[1_02]]
     cursor_color = "#aaaaaa"
-    custom_command = ssh -t orin01@10.10.10.11 'source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch px4ctrl run_ctrl.launch';read;roslaunch px4ctrl run_ctrl.launch;bash';bash
+    custom_command = ssh -t orin01@10.10.10.11 'export ROS_MASTER_URI=http://10.10.10.11:11311;export ROS_HOSTNAME=10.10.10.11;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch px4ctrl run_ctrl.launch';read;roslaunch px4ctrl run_ctrl.launch;bash';bash
     use_custom_command = True
   [[1_03]]
     cursor_color = "#aaaaaa"
-    custom_command = ssh -t orin01@10.10.10.11 'source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch ego_planner single_run_in_exp.launch';read;roslaunch ego_planner single_run_in_exp.launch;bash';bash
+    custom_command = ssh -t orin01@10.10.10.11 'export ROS_MASTER_URI=http://10.10.10.11:11311;export ROS_HOSTNAME=10.10.10.11;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch ego_planner single_run_in_exp.launch';read;roslaunch ego_planner single_run_in_exp.launch;bash';bash
     use_custom_command = True
   [[1_04]]
     cursor_color = "#aaaaaa"
-    custom_command = ssh -t orin01@10.10.10.11 'source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0';read;roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0;bash';bash
+    custom_command = ssh -t orin01@10.10.10.11 'export ROS_MASTER_URI=http://10.10.10.11:11311;export ROS_HOSTNAME=10.10.10.11;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0';read;roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0;bash';bash
     use_custom_command = True
   [[1_05]]
     cursor_color = "#aaaaaa"
-    custom_command = ssh -t orin01@10.10.10.11 'source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch detect_box_pnp detect_box_pnp.launch';read;roslaunch detect_box_pnp detect_box_pnp.launch;bash';bash
+    custom_command = ssh -t orin01@10.10.10.11 'export ROS_MASTER_URI=http://10.10.10.11:11311;export ROS_HOSTNAME=10.10.10.11;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch detect_box_pnp detect_box_pnp.launch';read;roslaunch detect_box_pnp detect_box_pnp.launch;bash';bash
     use_custom_command = True
   [[1_06]]
     cursor_color = "#aaaaaa"
-    custom_command = ssh -t orin01@10.10.10.11 'source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_recognition target_recognition.launch';read;roslaunch target_recognition target_recognition.launch;bash';bash
+    custom_command = ssh -t orin01@10.10.10.11 'export ROS_MASTER_URI=http://10.10.10.11:11311;export ROS_HOSTNAME=10.10.10.11;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_recognition target_recognition.launch';read;roslaunch target_recognition target_recognition.launch;bash';bash
     use_custom_command = True
   [[1_07]]
     cursor_color = "#aaaaaa"
-    custom_command = ssh -t orin01@10.10.10.11 'source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch search_plan search_plan.launch';read;roslaunch search_plan search_plan.launch;bash';bash
+    custom_command = ssh -t orin01@10.10.10.11 'export ROS_MASTER_URI=http://10.10.10.11:11311;export ROS_HOSTNAME=10.10.10.11;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch search_plan search_plan.launch';read;roslaunch search_plan search_plan.launch;bash';bash
     use_custom_command = True
   [[1_08]]
     cursor_color = "#aaaaaa"
-    custom_command = ssh -t orin01@10.10.10.11 'source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_merge target_merge.launch';read;roslaunch target_merge target_merge.launch;bash';bash
+    custom_command = ssh -t orin01@10.10.10.11 'export ROS_MASTER_URI=http://10.10.10.11:11311;export ROS_HOSTNAME=10.10.10.11;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_merge target_merge.launch';read;roslaunch target_merge target_merge.launch;bash';bash
     use_custom_command = True
   [[1_09]]
     cursor_color = "#aaaaaa"
-    custom_command = ssh -t orin01@10.10.10.11 'source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sudo ifconfig wlan1 multicast';read;sudo ifconfig wlan1 multicast;echo 'sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1';read;sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1;echo 'roslaunch lcm_receive lcm_receive.launch';read;roslaunch lcm_receive lcm_receive.launch;bash';bash
+    custom_command = ssh -t orin01@10.10.10.11 'export ROS_MASTER_URI=http://10.10.10.11:11311;export ROS_HOSTNAME=10.10.10.11;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sudo ifconfig wlan1 multicast';read;sudo ifconfig wlan1 multicast;echo 'sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1';read;sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1;echo 'roslaunch lcm_receive lcm_receive.launch';read;roslaunch lcm_receive lcm_receive.launch;bash';bash
     use_custom_command = True
   [[1_10]]
     cursor_color = "#aaaaaa"
-    custom_command = ssh -t orin01@10.10.10.11 'source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch lcm_send lcm_send.launch';read;roslaunch lcm_send lcm_send.launch;bash';bash
+    custom_command = ssh -t orin01@10.10.10.11 'export ROS_MASTER_URI=http://10.10.10.11:11311;export ROS_HOSTNAME=10.10.10.11;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch lcm_send lcm_send.launch';read;roslaunch lcm_send lcm_send.launch;bash';bash
     use_custom_command = True
   [[1_11]]
     cursor_color = "#aaaaaa"
-    custom_command = sleep 1;ssh -t orin01@10.10.10.11 'source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/takeoff.sh';read;sh ~/Fast-Drone-XI35/shfiles/takeoff.sh;bash';bash
+    custom_command = sleep 1;ssh -t orin01@10.10.10.11 'export ROS_MASTER_URI=http://10.10.10.11:11311;export ROS_HOSTNAME=10.10.10.11;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/takeoff.sh';read;sh ~/Fast-Drone-XI35/shfiles/takeoff.sh;bash';bash
     use_custom_command = True
   [[2_01]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin02@10.10.10.12 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/rspx4.sh';read;sh ~/Fast-Drone-XI35/shfiles/rspx4.sh;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin02@10.10.10.12 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.12:11311;export ROS_HOSTNAME=10.10.10.12;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/rspx4.sh';read;sh ~/Fast-Drone-XI35/shfiles/rspx4.sh;exec bash";bash';bash'''
     use_custom_command = True
   [[2_02]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin02@10.10.10.12 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch px4ctrl run_ctrl.launch';read;roslaunch px4ctrl run_ctrl.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin02@10.10.10.12 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.12:11311;export ROS_HOSTNAME=10.10.10.12;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch px4ctrl run_ctrl.launch';read;roslaunch px4ctrl run_ctrl.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[2_03]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin02@10.10.10.12 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch ego_planner single_run_in_exp.launch';read;roslaunch ego_planner single_run_in_exp.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin02@10.10.10.12 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.12:11311;export ROS_HOSTNAME=10.10.10.12;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch ego_planner single_run_in_exp.launch';read;roslaunch ego_planner single_run_in_exp.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[2_04]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin02@10.10.10.12 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0';read;roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin02@10.10.10.12 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.12:11311;export ROS_HOSTNAME=10.10.10.12;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0';read;roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0;exec bash";bash';bash'''
     use_custom_command = True
   [[2_05]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin02@10.10.10.12 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch detect_box_pnp detect_box_pnp.launch';read;roslaunch detect_box_pnp detect_box_pnp.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin02@10.10.10.12 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.12:11311;export ROS_HOSTNAME=10.10.10.12;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch detect_box_pnp detect_box_pnp.launch';read;roslaunch detect_box_pnp detect_box_pnp.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[2_06]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin02@10.10.10.12 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_recognition target_recognition.launch';read;roslaunch target_recognition target_recognition.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin02@10.10.10.12 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.12:11311;export ROS_HOSTNAME=10.10.10.12;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_recognition target_recognition.launch';read;roslaunch target_recognition target_recognition.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[2_07]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin02@10.10.10.12 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch search_plan search_plan.launch';read;roslaunch search_plan search_plan.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin02@10.10.10.12 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.12:11311;export ROS_HOSTNAME=10.10.10.12;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch search_plan search_plan.launch';read;roslaunch search_plan search_plan.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[2_08]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin02@10.10.10.12 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_merge target_merge.launch';read;roslaunch target_merge target_merge.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin02@10.10.10.12 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.12:11311;export ROS_HOSTNAME=10.10.10.12;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_merge target_merge.launch';read;roslaunch target_merge target_merge.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[2_09]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin02@10.10.10.12 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sudo ifconfig wlan1 multicast';read;sudo ifconfig wlan1 multicast;echo 'sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1';read;sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1;echo 'roslaunch lcm_receive lcm_receive.launch';read;roslaunch lcm_receive lcm_receive.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin02@10.10.10.12 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.12:11311;export ROS_HOSTNAME=10.10.10.12;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sudo ifconfig wlan1 multicast';read;sudo ifconfig wlan1 multicast;echo 'sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1';read;sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1;echo 'roslaunch lcm_receive lcm_receive.launch';read;roslaunch lcm_receive lcm_receive.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[2_10]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin02@10.10.10.12 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch lcm_send lcm_send.launch';read;roslaunch lcm_send lcm_send.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin02@10.10.10.12 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.12:11311;export ROS_HOSTNAME=10.10.10.12;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch lcm_send lcm_send.launch';read;roslaunch lcm_send lcm_send.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[2_11]]
     cursor_color = "#aaaaaa"
-    custom_command = '''sleep 1;ssh -t orin02@10.10.10.12 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/takeoff.sh';read;sh ~/Fast-Drone-XI35/shfiles/takeoff.sh;exec bash";bash';bash'''
+    custom_command = '''sleep 1;ssh -t orin02@10.10.10.12 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.12:11311;export ROS_HOSTNAME=10.10.10.12;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/takeoff.sh';read;sh ~/Fast-Drone-XI35/shfiles/takeoff.sh;exec bash";bash';bash'''
     use_custom_command = True
   [[3_01]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin03@10.10.10.13 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/rspx4.sh';read;sh ~/Fast-Drone-XI35/shfiles/rspx4.sh;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin03@10.10.10.13 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.13:11311;export ROS_HOSTNAME=10.10.10.13;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/rspx4.sh';read;sh ~/Fast-Drone-XI35/shfiles/rspx4.sh;exec bash";bash';bash'''
     use_custom_command = True
   [[3_02]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin03@10.10.10.13 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch px4ctrl run_ctrl.launch';read;roslaunch px4ctrl run_ctrl.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin03@10.10.10.13 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.13:11311;export ROS_HOSTNAME=10.10.10.13;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch px4ctrl run_ctrl.launch';read;roslaunch px4ctrl run_ctrl.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[3_03]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin03@10.10.10.13 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch ego_planner single_run_in_exp.launch';read;roslaunch ego_planner single_run_in_exp.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin03@10.10.10.13 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.13:11311;export ROS_HOSTNAME=10.10.10.13;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch ego_planner single_run_in_exp.launch';read;roslaunch ego_planner single_run_in_exp.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[3_04]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin03@10.10.10.13 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0';read;roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin03@10.10.10.13 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.13:11311;export ROS_HOSTNAME=10.10.10.13;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0';read;roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0;exec bash";bash';bash'''
     use_custom_command = True
   [[3_05]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin03@10.10.10.13 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch detect_box_pnp detect_box_pnp.launch';read;roslaunch detect_box_pnp detect_box_pnp.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin03@10.10.10.13 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.13:11311;export ROS_HOSTNAME=10.10.10.13;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch detect_box_pnp detect_box_pnp.launch';read;roslaunch detect_box_pnp detect_box_pnp.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[3_06]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin03@10.10.10.13 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_recognition target_recognition.launch';read;roslaunch target_recognition target_recognition.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin03@10.10.10.13 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.13:11311;export ROS_HOSTNAME=10.10.10.13;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_recognition target_recognition.launch';read;roslaunch target_recognition target_recognition.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[3_07]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin03@10.10.10.13 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch search_plan search_plan.launch';read;roslaunch search_plan search_plan.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin03@10.10.10.13 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.13:11311;export ROS_HOSTNAME=10.10.10.13;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch search_plan search_plan.launch';read;roslaunch search_plan search_plan.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[3_08]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin03@10.10.10.13 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_merge target_merge.launch';read;roslaunch target_merge target_merge.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin03@10.10.10.13 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.13:11311;export ROS_HOSTNAME=10.10.10.13;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_merge target_merge.launch';read;roslaunch target_merge target_merge.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[3_09]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin03@10.10.10.13 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sudo ifconfig wlan1 multicast';read;sudo ifconfig wlan1 multicast;echo 'sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1';read;sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1;echo 'roslaunch lcm_receive lcm_receive.launch';read;roslaunch lcm_receive lcm_receive.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin03@10.10.10.13 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.13:11311;export ROS_HOSTNAME=10.10.10.13;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sudo ifconfig wlan1 multicast';read;sudo ifconfig wlan1 multicast;echo 'sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1';read;sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1;echo 'roslaunch lcm_receive lcm_receive.launch';read;roslaunch lcm_receive lcm_receive.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[3_10]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin03@10.10.10.13 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch lcm_send lcm_send.launch';read;roslaunch lcm_send lcm_send.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin03@10.10.10.13 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.13:11311;export ROS_HOSTNAME=10.10.10.13;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch lcm_send lcm_send.launch';read;roslaunch lcm_send lcm_send.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[3_11]]
     cursor_color = "#aaaaaa"
-    custom_command = '''sleep 1;ssh -t orin03@10.10.10.13 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/takeoff.sh';read;sh ~/Fast-Drone-XI35/shfiles/takeoff.sh;exec bash";bash';bash'''
+    custom_command = '''sleep 1;ssh -t orin03@10.10.10.13 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.13:11311;export ROS_HOSTNAME=10.10.10.13;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/takeoff.sh';read;sh ~/Fast-Drone-XI35/shfiles/takeoff.sh;exec bash";bash';bash'''
     use_custom_command = True
   [[4_01]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin04@10.10.10.14 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/rspx4.sh';read;sh ~/Fast-Drone-XI35/shfiles/rspx4.sh;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin04@10.10.10.14 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.14:11311;export ROS_HOSTNAME=10.10.10.14;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/rspx4.sh';read;sh ~/Fast-Drone-XI35/shfiles/rspx4.sh;exec bash";bash';bash'''
     use_custom_command = True
   [[4_02]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin04@10.10.10.14 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch px4ctrl run_ctrl.launch';read;roslaunch px4ctrl run_ctrl.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin04@10.10.10.14 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.14:11311;export ROS_HOSTNAME=10.10.10.14;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch px4ctrl run_ctrl.launch';read;roslaunch px4ctrl run_ctrl.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[4_03]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin04@10.10.10.14 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch ego_planner single_run_in_exp.launch';read;roslaunch ego_planner single_run_in_exp.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin04@10.10.10.14 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.14:11311;export ROS_HOSTNAME=10.10.10.14;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch ego_planner single_run_in_exp.launch';read;roslaunch ego_planner single_run_in_exp.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[4_04]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin04@10.10.10.14 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0';read;roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin04@10.10.10.14 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.14:11311;export ROS_HOSTNAME=10.10.10.14;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0';read;roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0;exec bash";bash';bash'''
     use_custom_command = True
   [[4_05]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin04@10.10.10.14 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch detect_box_pnp detect_box_pnp.launch';read;roslaunch detect_box_pnp detect_box_pnp.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin04@10.10.10.14 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.14:11311;export ROS_HOSTNAME=10.10.10.14;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch detect_box_pnp detect_box_pnp.launch';read;roslaunch detect_box_pnp detect_box_pnp.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[4_06]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin04@10.10.10.14 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_recognition target_recognition.launch';read;roslaunch target_recognition target_recognition.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin04@10.10.10.14 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.14:11311;export ROS_HOSTNAME=10.10.10.14;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_recognition target_recognition.launch';read;roslaunch target_recognition target_recognition.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[4_07]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin04@10.10.10.14 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch search_plan search_plan.launch';read;roslaunch search_plan search_plan.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin04@10.10.10.14 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.14:11311;export ROS_HOSTNAME=10.10.10.14;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch search_plan search_plan.launch';read;roslaunch search_plan search_plan.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[4_08]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin04@10.10.10.14 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_merge target_merge.launch';read;roslaunch target_merge target_merge.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin04@10.10.10.14 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.14:11311;export ROS_HOSTNAME=10.10.10.14;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_merge target_merge.launch';read;roslaunch target_merge target_merge.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[4_09]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin04@10.10.10.14 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sudo ifconfig wlan1 multicast';read;sudo ifconfig wlan1 multicast;echo 'sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1';read;sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1;echo 'roslaunch lcm_receive lcm_receive.launch';read;roslaunch lcm_receive lcm_receive.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin04@10.10.10.14 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.14:11311;export ROS_HOSTNAME=10.10.10.14;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sudo ifconfig wlan1 multicast';read;sudo ifconfig wlan1 multicast;echo 'sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1';read;sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1;echo 'roslaunch lcm_receive lcm_receive.launch';read;roslaunch lcm_receive lcm_receive.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[4_10]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin04@10.10.10.14 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch lcm_send lcm_send.launch';read;roslaunch lcm_send lcm_send.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin04@10.10.10.14 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.14:11311;export ROS_HOSTNAME=10.10.10.14;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch lcm_send lcm_send.launch';read;roslaunch lcm_send lcm_send.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[4_11]]
     cursor_color = "#aaaaaa"
-    custom_command = '''sleep 1;ssh -t orin04@10.10.10.14 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/takeoff.sh';read;sh ~/Fast-Drone-XI35/shfiles/takeoff.sh;exec bash";bash';bash'''
+    custom_command = '''sleep 1;ssh -t orin04@10.10.10.14 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.14:11311;export ROS_HOSTNAME=10.10.10.14;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/takeoff.sh';read;sh ~/Fast-Drone-XI35/shfiles/takeoff.sh;exec bash";bash';bash'''
     use_custom_command = True
   [[5_01]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin05@10.10.10.15 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/rspx4.sh';read;sh ~/Fast-Drone-XI35/shfiles/rspx4.sh;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin05@10.10.10.15 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.15:11311;export ROS_HOSTNAME=10.10.10.15;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/rspx4.sh';read;sh ~/Fast-Drone-XI35/shfiles/rspx4.sh;exec bash";bash';bash'''
     use_custom_command = True
   [[5_02]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin05@10.10.10.15 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch px4ctrl run_ctrl.launch';read;roslaunch px4ctrl run_ctrl.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin05@10.10.10.15 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.15:11311;export ROS_HOSTNAME=10.10.10.15;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch px4ctrl run_ctrl.launch';read;roslaunch px4ctrl run_ctrl.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[5_03]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin05@10.10.10.15 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch ego_planner single_run_in_exp.launch';read;roslaunch ego_planner single_run_in_exp.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin05@10.10.10.15 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.15:11311;export ROS_HOSTNAME=10.10.10.15;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch ego_planner single_run_in_exp.launch';read;roslaunch ego_planner single_run_in_exp.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[5_04]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin05@10.10.10.15 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0';read;roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin05@10.10.10.15 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.15:11311;export ROS_HOSTNAME=10.10.10.15;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0';read;roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0;exec bash";bash';bash'''
     use_custom_command = True
   [[5_05]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin05@10.10.10.15 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch detect_box_pnp detect_box_pnp.launch';read;roslaunch detect_box_pnp detect_box_pnp.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin05@10.10.10.15 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.15:11311;export ROS_HOSTNAME=10.10.10.15;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch detect_box_pnp detect_box_pnp.launch';read;roslaunch detect_box_pnp detect_box_pnp.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[5_06]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin05@10.10.10.15 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_recognition target_recognition.launch';read;roslaunch target_recognition target_recognition.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin05@10.10.10.15 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.15:11311;export ROS_HOSTNAME=10.10.10.15;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_recognition target_recognition.launch';read;roslaunch target_recognition target_recognition.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[5_07]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin05@10.10.10.15 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch search_plan search_plan.launch';read;roslaunch search_plan search_plan.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin05@10.10.10.15 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.15:11311;export ROS_HOSTNAME=10.10.10.15;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch search_plan search_plan.launch';read;roslaunch search_plan search_plan.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[5_08]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin05@10.10.10.15 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_merge target_merge.launch';read;roslaunch target_merge target_merge.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin05@10.10.10.15 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.15:11311;export ROS_HOSTNAME=10.10.10.15;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_merge target_merge.launch';read;roslaunch target_merge target_merge.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[5_09]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin05@10.10.10.15 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sudo ifconfig wlan1 multicast';read;sudo ifconfig wlan1 multicast;echo 'sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1';read;sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1;echo 'roslaunch lcm_receive lcm_receive.launch';read;roslaunch lcm_receive lcm_receive.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin05@10.10.10.15 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.15:11311;export ROS_HOSTNAME=10.10.10.15;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sudo ifconfig wlan1 multicast';read;sudo ifconfig wlan1 multicast;echo 'sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1';read;sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1;echo 'roslaunch lcm_receive lcm_receive.launch';read;roslaunch lcm_receive lcm_receive.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[5_10]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin05@10.10.10.15 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch lcm_send lcm_send.launch';read;roslaunch lcm_send lcm_send.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin05@10.10.10.15 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.15:11311;export ROS_HOSTNAME=10.10.10.15;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch lcm_send lcm_send.launch';read;roslaunch lcm_send lcm_send.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[5_11]]
     cursor_color = "#aaaaaa"
-    custom_command = '''sleep 1;ssh -t orin05@10.10.10.15 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/takeoff.sh';read;sh ~/Fast-Drone-XI35/shfiles/takeoff.sh;exec bash";bash';bash'''
+    custom_command = '''sleep 1;ssh -t orin05@10.10.10.15 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.15:11311;export ROS_HOSTNAME=10.10.10.15;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/takeoff.sh';read;sh ~/Fast-Drone-XI35/shfiles/takeoff.sh;exec bash";bash';bash'''
     use_custom_command = True
   [[6_01]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin06@10.10.10.16 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/rspx4.sh';read;sh ~/Fast-Drone-XI35/shfiles/rspx4.sh;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin06@10.10.10.16 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.16:11311;export ROS_HOSTNAME=10.10.10.16;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/rspx4.sh';read;sh ~/Fast-Drone-XI35/shfiles/rspx4.sh;exec bash";bash';bash'''
     use_custom_command = True
   [[6_02]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin06@10.10.10.16 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch px4ctrl run_ctrl.launch';read;roslaunch px4ctrl run_ctrl.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin06@10.10.10.16 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.16:11311;export ROS_HOSTNAME=10.10.10.16;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch px4ctrl run_ctrl.launch';read;roslaunch px4ctrl run_ctrl.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[6_03]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin06@10.10.10.16 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch ego_planner single_run_in_exp.launch';read;roslaunch ego_planner single_run_in_exp.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin06@10.10.10.16 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.16:11311;export ROS_HOSTNAME=10.10.10.16;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch ego_planner single_run_in_exp.launch';read;roslaunch ego_planner single_run_in_exp.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[6_04]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin06@10.10.10.16 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0';read;roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin06@10.10.10.16 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.16:11311;export ROS_HOSTNAME=10.10.10.16;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0';read;roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0;exec bash";bash';bash'''
     use_custom_command = True
   [[6_05]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin06@10.10.10.16 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch detect_box_pnp detect_box_pnp.launch';read;roslaunch detect_box_pnp detect_box_pnp.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin06@10.10.10.16 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.16:11311;export ROS_HOSTNAME=10.10.10.16;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch detect_box_pnp detect_box_pnp.launch';read;roslaunch detect_box_pnp detect_box_pnp.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[6_06]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin06@10.10.10.16 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_recognition target_recognition.launch';read;roslaunch target_recognition target_recognition.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin06@10.10.10.16 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.16:11311;export ROS_HOSTNAME=10.10.10.16;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_recognition target_recognition.launch';read;roslaunch target_recognition target_recognition.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[6_07]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin06@10.10.10.16 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch search_plan search_plan.launch';read;roslaunch search_plan search_plan.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin06@10.10.10.16 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.16:11311;export ROS_HOSTNAME=10.10.10.16;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch search_plan search_plan.launch';read;roslaunch search_plan search_plan.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[6_08]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin06@10.10.10.16 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_merge target_merge.launch';read;roslaunch target_merge target_merge.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin06@10.10.10.16 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.16:11311;export ROS_HOSTNAME=10.10.10.16;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_merge target_merge.launch';read;roslaunch target_merge target_merge.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[6_09]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin06@10.10.10.16 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sudo ifconfig wlan1 multicast';read;sudo ifconfig wlan1 multicast;echo 'sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1';read;sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1;echo 'roslaunch lcm_receive lcm_receive.launch';read;roslaunch lcm_receive lcm_receive.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin06@10.10.10.16 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.16:11311;export ROS_HOSTNAME=10.10.10.16;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sudo ifconfig wlan1 multicast';read;sudo ifconfig wlan1 multicast;echo 'sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1';read;sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1;echo 'roslaunch lcm_receive lcm_receive.launch';read;roslaunch lcm_receive lcm_receive.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[6_10]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin06@10.10.10.16 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch lcm_send lcm_send.launch';read;roslaunch lcm_send lcm_send.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin06@10.10.10.16 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.16:11311;export ROS_HOSTNAME=10.10.10.16;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch lcm_send lcm_send.launch';read;roslaunch lcm_send lcm_send.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[6_11]]
     cursor_color = "#aaaaaa"
-    custom_command = '''sleep 1;ssh -t orin06@10.10.10.16 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/takeoff.sh';read;sh ~/Fast-Drone-XI35/shfiles/takeoff.sh;exec bash";bash';bash'''
+    custom_command = '''sleep 1;ssh -t orin06@10.10.10.16 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.16:11311;export ROS_HOSTNAME=10.10.10.16;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/takeoff.sh';read;sh ~/Fast-Drone-XI35/shfiles/takeoff.sh;exec bash";bash';bash'''
     use_custom_command = True
   [[7_01]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin07@10.10.10.17 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/rspx4.sh';read;sh ~/Fast-Drone-XI35/shfiles/rspx4.sh;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin07@10.10.10.17 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.17:11311;export ROS_HOSTNAME=10.10.10.17;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/rspx4.sh';read;sh ~/Fast-Drone-XI35/shfiles/rspx4.sh;exec bash";bash';bash'''
     use_custom_command = True
   [[7_02]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin07@10.10.10.17 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch px4ctrl run_ctrl.launch';read;roslaunch px4ctrl run_ctrl.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin07@10.10.10.17 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.17:11311;export ROS_HOSTNAME=10.10.10.17;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch px4ctrl run_ctrl.launch';read;roslaunch px4ctrl run_ctrl.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[7_03]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin07@10.10.10.17 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch ego_planner single_run_in_exp.launch';read;roslaunch ego_planner single_run_in_exp.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin07@10.10.10.17 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.17:11311;export ROS_HOSTNAME=10.10.10.17;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch ego_planner single_run_in_exp.launch';read;roslaunch ego_planner single_run_in_exp.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[7_04]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin07@10.10.10.17 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0';read;roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin07@10.10.10.17 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.17:11311;export ROS_HOSTNAME=10.10.10.17;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0';read;roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0;exec bash";bash';bash'''
     use_custom_command = True
   [[7_05]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin07@10.10.10.17 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch detect_box_pnp detect_box_pnp.launch';read;roslaunch detect_box_pnp detect_box_pnp.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin07@10.10.10.17 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.17:11311;export ROS_HOSTNAME=10.10.10.17;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch detect_box_pnp detect_box_pnp.launch';read;roslaunch detect_box_pnp detect_box_pnp.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[7_06]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin07@10.10.10.17 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_recognition target_recognition.launch';read;roslaunch target_recognition target_recognition.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin07@10.10.10.17 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.17:11311;export ROS_HOSTNAME=10.10.10.17;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_recognition target_recognition.launch';read;roslaunch target_recognition target_recognition.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[7_07]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin07@10.10.10.17 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch search_plan search_plan.launch';read;roslaunch search_plan search_plan.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin07@10.10.10.17 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.17:11311;export ROS_HOSTNAME=10.10.10.17;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch search_plan search_plan.launch';read;roslaunch search_plan search_plan.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[7_08]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin07@10.10.10.17 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_merge target_merge.launch';read;roslaunch target_merge target_merge.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin07@10.10.10.17 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.17:11311;export ROS_HOSTNAME=10.10.10.17;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_merge target_merge.launch';read;roslaunch target_merge target_merge.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[7_09]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin07@10.10.10.17 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sudo ifconfig wlan1 multicast';read;sudo ifconfig wlan1 multicast;echo 'sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1';read;sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1;echo 'roslaunch lcm_receive lcm_receive.launch';read;roslaunch lcm_receive lcm_receive.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin07@10.10.10.17 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.17:11311;export ROS_HOSTNAME=10.10.10.17;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sudo ifconfig wlan1 multicast';read;sudo ifconfig wlan1 multicast;echo 'sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1';read;sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1;echo 'roslaunch lcm_receive lcm_receive.launch';read;roslaunch lcm_receive lcm_receive.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[7_10]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin07@10.10.10.17 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch lcm_send lcm_send.launch';read;roslaunch lcm_send lcm_send.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin07@10.10.10.17 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.17:11311;export ROS_HOSTNAME=10.10.10.17;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch lcm_send lcm_send.launch';read;roslaunch lcm_send lcm_send.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[7_11]]
     cursor_color = "#aaaaaa"
-    custom_command = '''sleep 1;ssh -t orin07@10.10.10.17 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/takeoff.sh';read;sh ~/Fast-Drone-XI35/shfiles/takeoff.sh;exec bash";bash';bash'''
+    custom_command = '''sleep 1;ssh -t orin07@10.10.10.17 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.17:11311;export ROS_HOSTNAME=10.10.10.17;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/takeoff.sh';read;sh ~/Fast-Drone-XI35/shfiles/takeoff.sh;exec bash";bash';bash'''
     use_custom_command = True
   [[8_01]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin08@10.10.10.18 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/rspx4.sh';read;sh ~/Fast-Drone-XI35/shfiles/rspx4.sh;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin08@10.10.10.18 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.18:11311;export ROS_HOSTNAME=10.10.10.18;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/rspx4.sh';read;sh ~/Fast-Drone-XI35/shfiles/rspx4.sh;exec bash";bash';bash'''
     use_custom_command = True
   [[8_02]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin08@10.10.10.18 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch px4ctrl run_ctrl.launch';read;roslaunch px4ctrl run_ctrl.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin08@10.10.10.18 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.18:11311;export ROS_HOSTNAME=10.10.10.18;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch px4ctrl run_ctrl.launch';read;roslaunch px4ctrl run_ctrl.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[8_03]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin08@10.10.10.18 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch ego_planner single_run_in_exp.launch';read;roslaunch ego_planner single_run_in_exp.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin08@10.10.10.18 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.18:11311;export ROS_HOSTNAME=10.10.10.18;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch ego_planner single_run_in_exp.launch';read;roslaunch ego_planner single_run_in_exp.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[8_04]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin08@10.10.10.18 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0';read;roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin08@10.10.10.18 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.18:11311;export ROS_HOSTNAME=10.10.10.18;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0';read;roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0;exec bash";bash';bash'''
     use_custom_command = True
   [[8_05]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin08@10.10.10.18 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch detect_box_pnp detect_box_pnp.launch';read;roslaunch detect_box_pnp detect_box_pnp.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin08@10.10.10.18 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.18:11311;export ROS_HOSTNAME=10.10.10.18;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch detect_box_pnp detect_box_pnp.launch';read;roslaunch detect_box_pnp detect_box_pnp.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[8_06]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin08@10.10.10.18 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_recognition target_recognition.launch';read;roslaunch target_recognition target_recognition.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin08@10.10.10.18 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.18:11311;export ROS_HOSTNAME=10.10.10.18;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_recognition target_recognition.launch';read;roslaunch target_recognition target_recognition.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[8_07]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin08@10.10.10.18 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch search_plan search_plan.launch';read;roslaunch search_plan search_plan.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin08@10.10.10.18 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.18:11311;export ROS_HOSTNAME=10.10.10.18;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch search_plan search_plan.launch';read;roslaunch search_plan search_plan.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[8_08]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin08@10.10.10.18 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_merge target_merge.launch';read;roslaunch target_merge target_merge.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin08@10.10.10.18 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.18:11311;export ROS_HOSTNAME=10.10.10.18;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch target_merge target_merge.launch';read;roslaunch target_merge target_merge.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[8_09]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin08@10.10.10.18 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sudo ifconfig wlan1 multicast';read;sudo ifconfig wlan1 multicast;echo 'sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1';read;sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1;echo 'roslaunch lcm_receive lcm_receive.launch';read;roslaunch lcm_receive lcm_receive.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin08@10.10.10.18 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.18:11311;export ROS_HOSTNAME=10.10.10.18;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sudo ifconfig wlan1 multicast';read;sudo ifconfig wlan1 multicast;echo 'sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1';read;sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1;echo 'roslaunch lcm_receive lcm_receive.launch';read;roslaunch lcm_receive lcm_receive.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[8_10]]
     cursor_color = "#aaaaaa"
-    custom_command = '''ssh -t orin08@10.10.10.18 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch lcm_send lcm_send.launch';read;roslaunch lcm_send lcm_send.launch;exec bash";bash';bash'''
+    custom_command = '''ssh -t orin08@10.10.10.18 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.18:11311;export ROS_HOSTNAME=10.10.10.18;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'roslaunch lcm_send lcm_send.launch';read;roslaunch lcm_send lcm_send.launch;exec bash";bash';bash'''
     use_custom_command = True
   [[8_11]]
     cursor_color = "#aaaaaa"
-    custom_command = '''sleep 1;ssh -t orin08@10.10.10.18 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/takeoff.sh';read;sh ~/Fast-Drone-XI35/shfiles/takeoff.sh;exec bash";bash';bash'''
+    custom_command = '''sleep 1;ssh -t orin08@10.10.10.18 'echo '123456' | sudo -S docker start fd_runtime;sudo docker exec -it  fd_runtime bash -c "export ROS_MASTER_URI=http://10.10.10.18:11311;export ROS_HOSTNAME=10.10.10.18;source /opt/ros/noetic/setup.bash;source ~/Fast-Drone-XI35/devel/setup.bash;echo 'sh ~/Fast-Drone-XI35/shfiles/takeoff.sh';read;sh ~/Fast-Drone-XI35/shfiles/takeoff.sh;exec bash";bash';bash'''
     use_custom_command = True
