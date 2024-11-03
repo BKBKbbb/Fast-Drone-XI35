@@ -1,11 +1,12 @@
 # 工程顶层目录所在路径
+# path_prefix: /root/Fast-Drone-XI35
 path_prefix: /home/orin01/Fast-Drone-XI35/
 
 paths:
   src/auto_search/target_merge/launch/target_merge.launch:
     - 
       # 组别 id
-      <param name="drone_id" value="\d+" type="int"/>: <param name="drone_id" value="1" type="int"/>
+      <param name="drone_id" value="\d+" type="int"/>: <param name="drone_id" value="2" type="int"/>
 
   src/realflight_modules/VINS-Fusion-gpu/config/fast_drone_250.yaml:
     -
@@ -22,7 +23,7 @@ paths:
   src/auto_search/search_plan/launch/search_plan.launch:
     - 
       # search plan 判断是否到达给定点的阈值半径
-      <param name="arrive_threshold" value="\d+.\d+" type="double"/>: <param name="arrive_threshold" value="0.6" type="double"/>
+      <param name="arrive_threshold" value="\d+.\d+" type="double"/>: <param name="arrive_threshold" value="0.5" type="double"/>
 
       # 无人机由起降区飞往拒止区的第一个点，即起始点，每一架各不相同
       # 与偏置相关
@@ -32,15 +33,15 @@ paths:
 
       # 搜索策略给定的路标点，每一架各不相同
       # 与偏置相关
-      # <arg name="point_num" value="\d+" />: <arg name="point_num" value="2" />
+      <arg name="point_num" value="\d+" />: <arg name="point_num" value="2" />
 
-      # <arg name="point0_x" value="-*\d+.\d+" />: <arg name="point0_x" value="8.5" />
-      # <arg name="point0_y" value="-*\d+.\d+" />: <arg name="point0_y" value="-2.0" />
-      # <arg name="point0_z" value="-*\d+.\d+" />: <arg name="point0_z" value="5.0" />
+      <arg name="point0_x" value="-*\d+.\d+" />: <arg name="point0_x" value="8.5" />
+      <arg name="point0_y" value="-*\d+.\d+" />: <arg name="point0_y" value="-2.0" />
+      <arg name="point0_z" value="-*\d+.\d+" />: <arg name="point0_z" value="5.0" />
 
-      # <arg name="point1_x" value="-*\d+.\d+" />: <arg name="point1_x" value="1.0" />
-      # <arg name="point1_y" value="-*\d+.\d+" />: <arg name="point1_y" value="-2.0" />
-      # <arg name="point1_z" value="-*\d+.\d+" />: <arg name="point1_z" value="5.0" />
+      <arg name="point1_x" value="-*\d+.\d+" />: <arg name="point1_x" value="1.0" />
+      <arg name="point1_y" value="-*\d+.\d+" />: <arg name="point1_y" value="-2.0" />
+      <arg name="point1_z" value="-*\d+.\d+" />: <arg name="point1_z" value="5.0" />
 
       # <arg name="point2_x" value="-*\d+.\d+" />: <arg name="point2_x" value="0.0" />
       # <arg name="point2_y" value="-*\d+.\d+" />: <arg name="point2_y" value="1.5" />
@@ -69,8 +70,8 @@ paths:
   src/planner/plan_manage/launch/single_run_in_exp.launch:
     -
       # ego planner 栅格地图的大小，单位[m]
-      <arg name="map_size_x" value="\d+"/>: <arg name="map_size_x" value="50"/>
-      <arg name="map_size_y" value="\d+"/>: <arg name="map_size_y" value="50"/>
+      <arg name="map_size_x" value="\d+"/>: <arg name="map_size_x" value="150"/>
+      <arg name="map_size_y" value="\d+"/>: <arg name="map_size_y" value="100"/>
       <arg name="map_size_z" value="\d+.\d+"/>: <arg name="map_size_z" value="9.0"/>
 
       # ego planner 规划的最大速度和加速度
