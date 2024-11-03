@@ -18,7 +18,8 @@ categories:
 - [2 飞控配置](#2-飞控配置)
 - [3 orin nx 配置](#3-orin-nx-配置)
 - [4 docker 配置与使用](#4-docker-配置与使用)
-- [5 需要注意的问题](#5-需要注意的问题)
+- [5 启动流程](#5-启动流程)
+- [6 需要注意的问题](#6-需要注意的问题)
 - [参考](#参考)
 
 ## 1 机体安装步骤
@@ -302,11 +303,18 @@ make -j${USE_PROC} && make install
 sudo ifconfig wlan1 multicast
 sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1
 ```
-### 3.10 安装 skimage
+
+### 3.10 安装 onnxruntime
+
+```shell
+pip install onnxruntime
+```
+
+### 3.11 安装 skimage
 ```shell
 pip install scikit-image
 ```
-  
+
 ## 4 Docker 配置与使用
 底层基础镜像：NVIDIA L4T JetPack r35.3.1
 官方镜像地址：https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-jetpack
@@ -326,6 +334,9 @@ pip install scikit-image
 ```shell
 make jetson_base 
 ```
+
+**具体使用见 4.6**
+
 ### 4.2 构建Fast-Drone-XI35工程镜像Dockerfile.jetson
 在Dockerfile.jetson_base的基础上构建，从github上拉取最新的Fast-Drone-XI35并进行编译，加入容器初始化脚本。
 由于dockerhub在国内无法访问，基础环境镜像暂时没有push到远程仓库，通过docker save打包成.tar文件，借助u盘拷贝至宿主机，再通过docker load解压得到基础环境镜像local/fastdronexi35:orin_base_35.3.1。
@@ -386,26 +397,123 @@ docker run -itd --privileged=true --network host \
 ④运行make jetson构建新的工程镜像
 上述操作已集成在"update_jetson.sh"脚本中，当需要进行镜像更新时，直接运行该脚本即可，注意需要宿主机有基础环境镜像（tag为"local/fastdronexi35:orin_base_35.3.1"），否则无法构建。
 ### 4.6 容器部署简要流程
-从构建基础环境镜像到运行容器的整个流程，所有命令在/Docker/Dockerfile目录下执行。
+
+首先 clone 本仓库，之后的从构建基础环境镜像到运行容器的整个流程，所有命令在/Docker/Dockerfile目录下执行。
+
+```shell
+git clone https://github.com/Longer95479/Fast-Drone-XI35.git
+```
+
 - 构建基础环境镜像: local/fastdronexi35:orin_base_35.3.1
 ```shell
 make jetson_base
 docker tag fastdronexi35:orin_base_35.3.1 local/fastdronexi35:orin_base_35.3.1
 ```
-- 构建工程镜像: fastdronexi35:orin
+或者 直接从移动硬盘里加载镜像的 tar 文件
+```shell
+sudo docker load -i fastdronexi35_base.tar
+```
+
+- 在本工程的 `/Docker/Dockerfile`下执行命令，构建工程镜像: fastdronexi35:orin
 ```shell
 make jetson
 ```
-- 执行容器启动脚本
+- 首次编译完成后，执行容器启动脚本
 ```shell
 ./container_run.sh
 ```
-- 更新工程镜像
+
+后续重启后，只需执行以下命令启动容器
+```shell
+sudo docker start fd_runtime
+```
+
+- 进入容器的 bash
+
+```shell
+sudo docker exec -it  fd_runtime bash
+```
+
+- 如果需要更新工程镜像，则执行
 ```shell
 ./update_jetson.sh
 ```
 
-## 5 需要注意的问题
+## 5 启动流程
+
+- ssh 连接到 orin 板，如 `ssh orin01@10.10.10.11`
+
+悬停功能：
+
+- 启动里程计
+  - `sh Fast-Drone-XI35/shfiles/rspx4.sh`
+
+- 启动运动控制器
+  - `roslaunch px4ctrl run_ctrl.launch`
+
+可选功能：
+
+- 启动 ego-planner
+  - `roslaunch ego_planner single_run_in_exp.launch`
+
+
+- 打开下视摄像头，并进行数字标识检测、定位、识别
+  - `roslaunch jetson_csi_cam jetson_csi_cam.launch sensor_id:=0`
+  - `roslaunch detect_box_pnp detect_box_pnp.launch`
+  -  `roslaunch target_recognition target_recognition.launch`
+
+- 打开多机协同搜索的状态机，以及目标结果融合
+  - `roslaunch search_plan search_plan.launch`
+  - `roslaunch target_merge target_merge.launch`
+
+- 打开多机自组网通信
+    - `sudo ifconfig wlan1 multicast`
+    - `sudo route add -net 224.0.0.0 netmask 240.0.0.0 dev wlan1`
+    - `roslaunch lcm_receive lcm_receive.launch`
+    - `roslaunch lcm_send lcm_send.launch`
+
+起飞：
+
+- `sh Fast-Drone-XI35/shfiles/takeoff.sh`
+
+### 机间特异性配置
+
+- src/realflight_modules/VINS-Fusion-gpu/config/fast_drone_250.yaml: 107L
+```shell
+  odometry_type: 1 #0为原始里程计，1为加了偏置后的里程计
+  drone_id: 2
+  single_offset: 2.0
+```
+- src/auto_search/target_merge/launch/target_merge.launch: 9L
+```xml
+<param name="drone_id" value="2" type="int"/>
+```
+
+- src/auto_search/search_plan/launch/search_plan.launch: 4L
+```xml
+    <arg name="point_num" value="1" />
+
+    <arg name="point0_x" value="3.5" />
+    <arg name="point0_y" value="-2.0" />
+    <arg name="point0_z" value="0.7" />
+...
+39L
+        <param name="search_startpoint_x" value="1.0" type="double"/>
+        <param name="search_startpoint_y" value="-2.0" type="double"/>
+        <param name="search_startpoint_z" value="0.7" type="double"/>
+```
+
+- .bashrc ROS多机配置
+
+### 与飞行场地大小相关的参数配置
+
+- search_plan 里的到达半径/阈值
+- ego_planner 里的
+    - thresh_no_replan
+    - 规划最大速度
+- px4ctrl 里的飞行最大速度
+
+## 6 需要注意的问题
 
 ### 飞控相关
 
