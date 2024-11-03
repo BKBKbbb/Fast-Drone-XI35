@@ -1,6 +1,7 @@
 <launch>
 	
 	<node pkg="target_recognition" type="target_recognition_node.py" name="target_recognition" output="screen">
+	<param name="blur_threshold" value="0.2" type="double"/>
 	</node>
 	
 </launch>

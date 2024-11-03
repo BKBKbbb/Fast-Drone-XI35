@@ -63,10 +63,13 @@ namespace ego_planner
     //紧急进入Hover
     Emergency_Hover = nh.advertise<std_msgs::Bool>("/planning/Emergency_hover", 1);
 
+    takeoff_land_sub = nh.subscribe("/px4ctrl/takeoff_land", 1, &EGOReplanFSM::takeoffLandCallback, this);
+
     if (target_type_ == TARGET_TYPE::MANUAL_TARGET)
     {
       waypoint_sub_ = nh.subscribe("/move_base_simple/goal", 1, &EGOReplanFSM::waypointCallback, this);
       search_plan_sub = nh.subscribe("/search_plan/pos_cmd", 1, &EGOReplanFSM::searchPlanCallback, this);
+      search_hover_sub = nh.subscribe("/target_merge/search_hover", 1, &EGOReplanFSM::searchHoverCallback, this);
     }
     else if (target_type_ == TARGET_TYPE::PRESET_TARGET)
     {
@@ -213,6 +216,16 @@ namespace ego_planner
     }
   }
 
+  void EGOReplanFSM::takeoffLandCallback(const quadrotor_msgs::TakeoffLandConstPtr &msg)
+  {
+    if (msg->takeoff_land_cmd == quadrotor_msgs::TakeoffLand::LAND) {
+      have_trigger_ = false;
+      have_target_ = false;
+      changeFSMExecState(WAIT_TARGET, "Search_Plan_Land");
+    }
+  }
+
+
   void EGOReplanFSM::triggerCallback(const geometry_msgs::PoseStampedPtr &msg)
   {
     have_trigger_ = true;
@@ -247,6 +260,18 @@ namespace ego_planner
 
       planNextWaypoint(end_wp);
   }
+
+  void EGOReplanFSM::searchHoverCallback(const std_msgs::BoolConstPtr &msg)
+  {
+    if(msg->data == true)
+    {
+      std::unique_lock<std::mutex> lck(state_mtx);
+      have_trigger_ = false;
+      have_target_ = false;
+      changeFSMExecState(WAIT_TARGET, "Search_Hover");
+    }
+  }
+
   void EGOReplanFSM::odometryCallback(const nav_msgs::OdometryConstPtr &msg)
   {
     odom_pos_(0) = msg->pose.pose.position.x;
@@ -429,7 +454,6 @@ namespace ego_planner
 
   void EGOReplanFSM::changeFSMExecState(FSM_EXEC_STATE new_state, string pos_call)
   {
-
     if (new_state == exec_state_)
       continously_called_times_++;
     else
@@ -468,7 +492,7 @@ namespace ego_planner
         cout << "wait for goal or trigger." << endl;
       fsm_num = 0;
     }
-
+    std::unique_lock<std::mutex> lck(state_mtx);
     switch (exec_state_)
     {
     case INIT:
