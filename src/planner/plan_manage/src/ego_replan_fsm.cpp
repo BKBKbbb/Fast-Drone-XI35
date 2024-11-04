@@ -69,7 +69,7 @@ namespace ego_planner
     {
       waypoint_sub_ = nh.subscribe("/move_base_simple/goal", 1, &EGOReplanFSM::waypointCallback, this);
       search_plan_sub = nh.subscribe("/search_plan/pos_cmd", 1, &EGOReplanFSM::searchPlanCallback, this);
-      search_hover_sub = nh.subscribe("/target_merge/search_hover", 1, &EGOReplanFSM::searchHoverCallback, this);
+      search_hover_sub = nh.subscribe("/Search_plan/search_hover", 1, &EGOReplanFSM::searchHoverCallback, this);
     }
     else if (target_type_ == TARGET_TYPE::PRESET_TARGET)
     {
