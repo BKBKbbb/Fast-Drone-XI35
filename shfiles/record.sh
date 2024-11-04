@@ -11,9 +11,11 @@ rosbag record --tcpnodelay \
 /vins_fusion/odometry \
 /vins_fusion/imu_propagate \
 /vins_fusion/extrinsic \
-/camera/infra1/image_rect_raw \
-/camera/infra2/image_rect_raw \
-/camera/depth/image_rect_raw \
+/vins_fusion/image_track \
+/detect_result_image/compressed \
 /mavros/imu/data_raw \
 /move_base_simple/goal \
 /position_cmd
+# /camera/infra1/image_rect_raw \
+# /camera/infra2/image_rect_raw \
+# /camera/depth/image_rect_raw \
