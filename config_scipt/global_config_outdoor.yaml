@@ -1,6 +1,6 @@
 # 工程顶层目录所在路径
-# path_prefix: /root/Fast-Drone-XI35
-path_prefix: /home/orin01/Fast-Drone-XI35/
+path_prefix: /root/Fast-Drone-XI35/
+# path_prefix: /home/orin01/Fast-Drone-XI35/
 
 paths:
   src/auto_search/target_merge/launch/target_merge.launch:
