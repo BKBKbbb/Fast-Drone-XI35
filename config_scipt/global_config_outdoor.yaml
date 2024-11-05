@@ -27,7 +27,7 @@ paths:
 
       # 无人机由起降区飞往拒止区的第一个点，即起始点，每一架各不相同
       # 与偏置相关
-      <param name="search_startpoint_x" value="-*\d+.\d+" type="double"/>: <param name="search_startpoint_x" value="1.0" type="double"/>
+      <param name="search_startpoint_x" value="-*\d+.\d+" type="double"/>: <param name="search_startpoint_x" value="4.0" type="double"/>
       <param name="search_startpoint_y" value="-*\d+.\d+" type="double"/>: <param name="search_startpoint_y" value="-2.0" type="double"/>
       <param name="search_startpoint_z" value="-*\d+.\d+" type="double"/>: <param name="search_startpoint_z" value="5.0" type="double"/>
 
@@ -66,6 +66,8 @@ paths:
     - 
       # ego planner 栅格地图的分辨率，单位[m]
       "<param name=\"grid_map/resolution\"      value=\"\\d+.\\d+\" />": "<param name=\"grid_map/resolution\"      value=\"1.0\" />"
+      # ego planner 深度图滤波器，低于此值的深度不被用于栅格地图构建
+      "<param name=\"grid_map/depth_filter_mindist\"   value=\"\\d+.\\d+\"/>": "<param name=\"grid_map/depth_filter_mindist\"   value=\"3.0\"/>"
 
   src/planner/plan_manage/launch/single_run_in_exp.launch:
     -

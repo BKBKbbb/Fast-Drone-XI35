@@ -127,6 +127,7 @@ namespace auto_search
 		void readGivenWps();		// 初始化读取给定的一系列搜索策略目标点
 		bool targetBeSeenByMyself(const ros::Time &now_time);
 		void getDistanceToTarget();
+		void callSearchHover(bool req_type);
 
 		void printFSMExecState();
 		void changeMainState(MAIN_STATE next_state, std::string pos_call);

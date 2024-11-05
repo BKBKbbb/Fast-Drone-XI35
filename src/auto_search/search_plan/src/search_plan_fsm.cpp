@@ -86,6 +86,7 @@ void Search_Plan_FSM::execSearchStage()
         // slow_down_trig_pos = current_Position + current_R_b2w_ * slowdown_forward_vector_;  // longer's slowdown stratege
         slow_down_trig_pos = current_Position;
         // slow_down_trig_pos.z() = slow_down_height_;
+        callSearchHover(true);
       }
     }
     else {
@@ -97,6 +98,7 @@ void Search_Plan_FSM::execSearchStage()
       if (!has_slow_down_req_) {
         start_the_clock = true;
         has_slow_down_req_ = false;
+        callSearchHover(false);
 
         changeSearchSubState(SEARCH_NUMS, "execSearchStage()");
 
@@ -107,9 +109,7 @@ void Search_Plan_FSM::execSearchStage()
         has_slow_down_req_ = false;
 
         // make px4ctrl back to CMD mode from AUTO_HOVER mode
-        std_msgs::Bool msg;
-        msg.data = false;
-        pub_CallHover.publish(msg);
+        callSearchHover(false);
 
         changeSearchSubState(SEARCH_NUMS, "execSearchStage()");
 
@@ -225,8 +225,10 @@ void Search_Plan_FSM::execLandStage()
 
   case TAKE_LAND:
   {
-    if (continously_called_times_ == 1)
+    if (continously_called_times_ == 1) {
+      callSearchHover(true);
       publishLand();
+    }
 
     static int count = 0;
     if (count < 100) {
@@ -560,6 +562,20 @@ void Search_Plan_FSM::initState()
   ROS_INFO("Initail State: STARTING_AREA_STAGE<TAKE_OFF>");
 }
 
+// true:  slow down
+// false: normal
+void Search_Plan_FSM::callSearchHover(bool req_type)
+{
+  std_msgs::Bool msg;
+  // slow down
+  if(req_type == true)
+    msg.data = true;
+  // normal
+  else if(req_type == false)
+    msg.data = false;
+  pub_CallHover.publish(msg);
+}
+
 
 void Search_Plan_FSM::init(ros::NodeHandle& nh)
 {
@@ -616,7 +632,7 @@ void Search_Plan_FSM::init(ros::NodeHandle& nh)
   // pub
   pub_Target = nh.advertise<geometry_msgs::PoseStamped>("/search_plan/pos_cmd", 50);
   pub_Land = nh.advertise<quadrotor_msgs::TakeoffLand>("/px4ctrl/takeoff_land", 5, true);
-  pub_CallHover = nh.advertise<std_msgs::Bool>("/target_merge/search_hover", 1);
+  pub_CallHover = nh.advertise<std_msgs::Bool>("/Search_plan/search_hover", 1);
 
   // srv
   srv_slowdown = nh.advertiseService("/search_plan/slowdown_for_reg", &Search_Plan_FSM::slowDownServiceCallBack, this);
