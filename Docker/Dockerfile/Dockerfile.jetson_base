@@ -172,6 +172,9 @@ RUN   cd /root && unzip opencv-3.4.16.zip && unzip opencv_contrib-3.4.16.zip && 
       .. && \
       make -j${USE_PROC} && \
       make install
+#Other config
+RUN   /usr/bin/pip3 install scikit-image
+
 #Config SSH
 RUN  mkdir /var/run/sshd && \
 echo 'root:123456' | chpasswd && \
