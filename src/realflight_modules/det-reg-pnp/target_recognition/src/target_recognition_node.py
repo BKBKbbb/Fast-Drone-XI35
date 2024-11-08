@@ -54,7 +54,7 @@ def handle_process_image(req):
     try:
         script_directory = os.path.dirname(os.path.abspath(__file__))
         onnx_model_path = os.path.dirname(script_directory)
-        onnx_model_path = onnx_model_path + "/model.onnx"
+        onnx_model_path = onnx_model_path + "/classifier.onnx"
         blur_threshold = rospy.get_param('~blur_threshold', 0.2)
         cv_image = bridge.imgmsg_to_cv2(req.image, "bgr8")
         is_blurred, ratio = detect_blur_fft(cv_image, blur_threshold)
@@ -72,7 +72,7 @@ def handle_process_image(req):
         outs = net_session.run(None, inputs)[0]
 
         #rospy.loginfo("onnx weights: %s", outs)
-        prediction = outs.argmax(axis=1)[0]
+        prediction = outs.argmax(axis=1)[0] + 1
         weight = np.max(outs)
         #rospy.loginfo("onnx prediction: %d", prediction)
 

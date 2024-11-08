@@ -207,7 +207,7 @@ int main(int argc, char **argv)
 
         parameters->adaptiveThreshWinSizeMin = 3;
         parameters->adaptiveThreshWinSizeMax = 5003;
-        parameters->adaptiveThreshWinSizeStep = 1000;
+        parameters->adaptiveThreshWinSizeStep = 500;
         parameters->polygonalApproxAccuracyRate = 0.025;
         
         cv::aruco::detectMarkers(img, dictionary, markerCorners_deted, markerids_deted, parameters, rejectedCandidate);
