@@ -67,7 +67,7 @@ paths:
       # ego planner 栅格地图的分辨率，单位[m]
       "<param name=\"grid_map/resolution\"      value=\"\\d+.\\d+\" />": "<param name=\"grid_map/resolution\"      value=\"1.0\" />"
       # ego planner 深度图滤波器，低于此值的深度不被用于栅格地图构建
-      "<param name=\"grid_map/depth_filter_mindist\"   value=\"\\d+.\\d+\"/>": "<param name=\"grid_map/depth_filter_mindist\"   value=\"3.0\"/>"
+      "<param name=\"grid_map/depth_filter_mindist\"   value=\"\\d+.\\d+\"/>": "<param name=\"grid_map/depth_filter_mindist\"   value=\"4.9\"/>"
 
   src/planner/plan_manage/launch/single_run_in_exp.launch:
     -
@@ -77,7 +77,7 @@ paths:
       <arg name="map_size_z" value="\d+.\d+"/>: <arg name="map_size_z" value="9.0"/>
 
       # ego planner 规划的最大速度和加速度
-      "<arg name=\"max_vel\" value=\"\\d+.\\d+\" />": "<arg name=\"max_vel\" value=\"1.0\" />"
+      "<arg name=\"max_vel\" value=\"\\d+.\\d+\" />": "<arg name=\"max_vel\" value=\"0.5\" />"
       "<arg name=\"max_acc\" value=\"\\d+.\\d+\" />": "<arg name=\"max_acc\" value=\"3.0\" />"
 
       # 提供给 ego planner 的路标点

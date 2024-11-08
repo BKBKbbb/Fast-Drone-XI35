@@ -9,6 +9,7 @@ void GridMap::initMap(ros::NodeHandle &nh)
 
   /* get parameter */
   double x_size, y_size, z_size;
+  double map_origin_x, map_origin_y;
   node_.param("grid_map/resolution", mp_.resolution_, -1.0);
   node_.param("grid_map/map_size_x", x_size, -1.0);
   node_.param("grid_map/map_size_y", y_size, -1.0);
@@ -17,6 +18,8 @@ void GridMap::initMap(ros::NodeHandle &nh)
   node_.param("grid_map/local_update_range_y", mp_.local_update_range_(1), -1.0);
   node_.param("grid_map/local_update_range_z", mp_.local_update_range_(2), -1.0);
   node_.param("grid_map/obstacles_inflation", mp_.obstacles_inflation_, -1.0);
+  node_.param("grid_map/map_origin_x", map_origin_x, -1.0);
+  node_.param("grid_map/map_origin_y", map_origin_y, -1.0);
 
   node_.param("grid_map/fx", mp_.fx_, -1.0);
   node_.param("grid_map/fy", mp_.fy_, -1.0);
@@ -53,7 +56,9 @@ void GridMap::initMap(ros::NodeHandle &nh)
   node_.param("grid_map/odom_depth_timeout", mp_.odom_depth_timeout_, 1.0);
 
   mp_.resolution_inv_ = 1 / mp_.resolution_;
-  mp_.map_origin_ = Eigen::Vector3d(-x_size / 2.0, -y_size / 2.0, mp_.ground_height_);
+  // mp_.map_origin_ = Eigen::Vector3d(-x_size / 2.0, -y_size / 2.0, mp_.ground_height_);
+  mp_.map_origin_ = Eigen::Vector3d(map_origin_x, map_origin_y, mp_.ground_height_);
+  std::cout << "map_origin: " << mp_.map_origin_ << std::endl;
   mp_.map_size_ = Eigen::Vector3d(x_size, y_size, z_size);
 
   mp_.prob_hit_log_ = logit(mp_.p_hit_);
