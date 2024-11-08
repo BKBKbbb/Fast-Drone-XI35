@@ -9,6 +9,7 @@
 #include <vector>
 #include <list>
 #include <visualization_msgs/Marker.h>
+#include <boost/bind.hpp>
 #include "search_plan/SearchService.h"
 #include "target_merge/TargetMerged_Message.h"
 
@@ -103,15 +104,21 @@ private:
   SingleMerged_Type  single_Merged[3];//本机识别统计结果
   TargetMerged_Type target_Merged[3];//多机融合结果，定期广播
 
+  bool use_judge_reliable;//是否应用判断目标是否可靠
+  int reset_nums[3];//在未形成融合结果前被重置的次数
+  bool target_reliable[3]={true};//目标是否可靠
+
   //ros
+  ros::NodeHandle nh;
   ros::Publisher pub_TargetMerged;
   ros::Publisher pub_TargetToSearch;
   ros::Publisher pub_TargetRviz;
   ros::Publisher pub_CallHover;
   ros::Subscriber sub_TargetSingle;
   ros::Subscriber sub_TargetMerged;
-  ros::Timer timer_PubTarget;
   ros::ServiceClient client_Search;
+  ros::Timer timer_PubTarget;
+  ros::Timer timer_ResetReliable;
   //var
   int single_merged_threshold;//每识别指定次数的目标就将统计结果加入到融合结果
   int slow_down_counts;//识别超过一定次数就slow down
@@ -120,6 +127,7 @@ private:
   int search_state = 0;//search状态
   int search_type = 0;//正在进行减速识别的目标
   int callstop_type = 0;//请求悬停的消息形式
+  int set2unreliable_thresh;//设置为不可靠的阈值
   //function
   void updateSingleTarget(const SingleTargetPtr &target);//push单个目标信息，更新single_Merged
   void updateTargetMerged(const TargetMergedPtr &target);//push融合目标信息，更新target_Merged
@@ -132,8 +140,9 @@ private:
   void singleTargetCallback(const geometry_msgs::PoseStampedConstPtr &msg);
   void targetMergedCallback(const target_merge::TargetMerged_MessageConstPtr &msg);
   void targetPubCallback(const ros::TimerEvent &e);
+  void resetReliableCallback(int target, const ros::TimerEvent &e);
 public:
-  void init(ros::NodeHandle &nh);
+  void init();
   Target_Merge(/* args */)
   {
 

@@ -5,6 +5,12 @@ namespace target_merge
 int drone_id;
 std::string PUB_TARGET_TOPIC,PUB_TARGET_SEARCH_TOPIC, SUB_TARGET_TOPIC, SUB_PNP_TOPIC, SEARCH_SERVICE_NAME;
 bool open_visualization = false;
+//恢复指定目标为可靠
+void Target_Merge::resetReliableCallback(int target, const ros::TimerEvent &e)
+{
+  ROS_WARN("reset target-%d to reliabe!", target+1);
+  target_reliable[target] = true;
+}
 //自身目标识别回调
 void Target_Merge::singleTargetCallback(const geometry_msgs::PoseStampedConstPtr &msg)
 {
@@ -53,6 +59,18 @@ void Target_Merge::updateSingleTarget(const SingleTargetPtr &target)
     {//累积次数小于一定次数，方差不能大于较小值，否则重置
       ROS_WARN("the target-%d's cov (%lf, %lf) is exceed the threshold %lf, will reset the value", target->type, st.cov(0,0), st.cov(1,1), cov_threshold_1);
       st.reset();
+      //重置次数过多标记为不可靠
+      if(use_judge_reliable && target_reliable[index])
+      {
+        reset_nums[index]++;
+        if(reset_nums[index] > set2unreliable_thresh)
+        {
+          reset_nums[index] = 0;
+          target_reliable[index] = false;
+          ROS_WARN("set target %d to unreliable!", target->type);
+          timer_ResetReliable = nh.createTimer(ros::Duration(10), boost::bind(&Target_Merge::resetReliableCallback, this, index, _1), true);
+        }
+      }
       return;
     }
     else if(st.observed_Counts > single_merged_threshold && (st.cov(0,0) > cov_threshold_2 || st.cov(1,1) > cov_threshold_2))
@@ -65,20 +83,24 @@ void Target_Merge::updateSingleTarget(const SingleTargetPtr &target)
   //如果还没对该目标发起过悬停且识别次数大于阈值，则请求悬停
   if(!st.have_call_slowDown && st.observed_Counts >= slow_down_counts)
   {
-    search_state = 1;
-    search_type = target->type;
-    st.have_call_slowDown = true;
-    if(callstop_type == 1)
-    {//采用话题形式请求悬停
-
-      callSearchHover(Target_Merge::Slow_Down);
-      ROS_WARN("callSearchHover: Slow_Down, type: %d", target->type);
+    if(target_reliable[index])
+    {//该目标是稳定的，才会进行悬停
+      search_state = 1;
+      search_type = target->type;
+      st.have_call_slowDown = true;
+      if(callstop_type == 1)
+      {//采用话题形式请求悬停
+        callSearchHover(Target_Merge::Slow_Down);
+        ROS_WARN("callSearchHover: Slow_Down, type: %d", target->type);
+      }
+      else
+      {
+        callSearchService(Target_Merge::Slow_Down);
+        ROS_WARN("callSearchService: Slow_Down, type: %d", target->type);
+      }
     }
-    else
-    {
-      callSearchService(Target_Merge::Slow_Down);
-      ROS_WARN("callSearchService: Slow_Down, type: %d", target->type);
-    }
+    else  
+      ROS_WARN("Target-%d is unreliable, refusing to Slow_Down", index);
   }
   //如果该目标观测次数超过一定阈值就加入到融合结果
   if(st.observed_Counts % single_merged_threshold == 0)
@@ -258,7 +280,7 @@ void Target_Merge::targetVisualization(const TargetMerged_Type &target)
   mark_msg.scale.z = 0.05;
   pub_TargetRviz.publish(mark_msg);
 }
-void Target_Merge::init(ros::NodeHandle &nh)
+void Target_Merge::init()
 {
   //ros
   nh.param<int>("/target_merge_node/single_merged_threshold", single_merged_threshold, 20);
@@ -271,6 +293,8 @@ void Target_Merge::init(ros::NodeHandle &nh)
   nh.param<double>("/target_merge_node/target_PubDuration", target_PubDuration, 2);
   nh.param<bool>("/target_merge_node/open_visualization", open_visualization, false);
   nh.param<int>("/target_merge_node/callstop_type", callstop_type, 0);
+  nh.param<bool>("/target_merge_node/use_judeg_reliable", use_judge_reliable, true);
+  nh.param<int>("/target_merge_node/set_to_unreliable_thresh", set2unreliable_thresh, 5);
 
   nh.param<std::string>("/target_merge_node/pub_target_merged_topic", PUB_TARGET_TOPIC, "/target_merge/pub_target_merged");
   nh.param<std::string>("/target_merge_node/pub_target_to_search_topic", PUB_TARGET_SEARCH_TOPIC, "/target_merge/target_to_search");
